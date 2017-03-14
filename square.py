@@ -28,6 +28,9 @@ class Square():
         
         return self.square_type is SquareType.START_SQUARE
 
+    def is_end(self):
+
+        return self.square_type is SquareType.END_SQUARE
 
     def is_empty(self):
         
