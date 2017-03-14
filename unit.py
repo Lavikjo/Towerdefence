@@ -3,6 +3,7 @@ class Unit():
 	def __init__(self):
 		self.pos = None
 		self.world = None
+		self.type = None
 
 	def get_pos(self):
 
@@ -11,6 +12,18 @@ class Unit():
 	def get_world(self):
 
 		return self.world
+
+	def get_type(self):
+
+		return self.type
+
+	def set_type(self, new_type):
+
+		self.type = new_type
+
+	def set_pos(self, pos):
+
+		self.pos = pos
 
 	def set_world(self, world, pos):
 
