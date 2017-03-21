@@ -17,7 +17,7 @@ class Spawner():
 		Returns next random enemy from wave
 		'''
 		# generate wave dictionary with only positive amounts
-		wave = {key: value for (key, value) in self.wave if value}
+		wave = {key: value for (key, value) in self.wave.items() if value}
 
 		if wave:
 			enemy_type, amount = self.random.choice(list(self.wave.keys()))
@@ -36,3 +36,10 @@ class Spawner():
 			enemy = Enemy(enemy_type)
 			self.world.add_enemy(enemy, self.world.get_start_square())
 			self.spawntimer.start()
+	
+	def __str__(self):
+		'''
+		Prints types and amounts of enemies left on current wave
+		'''
+		for key, value in self.wave.items():
+			print("Type: {}: {}".format(key, value))
