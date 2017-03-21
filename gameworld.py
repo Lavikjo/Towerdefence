@@ -12,15 +12,19 @@ class GameWorld():
 			self.squares[x] = [None] * height
 			for y in range(height):
 				self.squares[x][y] = Square(mapdata[x][y])
+		
 		self.enemies = []
 		self.towers = []
-		self.waves = []
+
 		self.base_hp = 10
 		self.money = 100
+
+		self.waves = []
 		self.current_wave = 0
 		self.max_waves = None
+		
 		self.route = []
-
+		self.start_square = None
 
 	def add_tower(self, tower, pos):
 		if tower.set_world(self, pos):
@@ -72,10 +76,31 @@ class GameWorld():
 		'''
 		if not self.get_number_of_enemies():
 			self.current_wave += 1
-			wave_spawner = Spawner(self.waves[self.current_wave])
+			wave_spawner = Spawner(self, self.waves[self.current_wave], 0.3, 100)
 
 	def get_route(self):
 		'''
 		Returns the route for the current map
 		'''
 		return self.route
+
+	def get_width(self):
+		
+		return len(self.squares)
+
+	def get_height(self):
+
+		return len(self.squares[0])
+
+	def get_start_square(self):
+		'''
+		Returns start square if it's set, otherwise finds and sets it
+		'''
+		if self.start_square:
+			return self.start_square
+		else:
+			for x in range(self.get_width()):
+				for y in range(self.get_height()):
+					if self.squares[x][y].is_start():
+						self.start_square = self.squares[x][y]
+						return self.start_square

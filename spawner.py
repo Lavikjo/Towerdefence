@@ -4,7 +4,8 @@ from random import Random, choice
 class Spawner():
 
 
-	def __init__(self, wave, spawn_delay, seed):
+	def __init__(self, world, wave, spawn_delay, seed):
+		self.world = world
 		self.wave = wave
 		self.complete = False
 		self.random random.Random(seed)
@@ -26,10 +27,12 @@ class Spawner():
 
 	def spawn_enemy(self):
 		'''
-		Spawns next random enemy to field and starts spawntimer until wave is complete
+		Spawns next random enemy to start square and starts spawntimer until wave is complete
 		'''
 		enemy_type = self.next_enemy()
 
 		if not self.complete:
 			self.wave[enemy_type] -= 1
+			enemy = Enemy(enemy_type)
+			self.world.add_enemy(enemy, self.world.get_start_square())
 			self.spawntimer.start()
