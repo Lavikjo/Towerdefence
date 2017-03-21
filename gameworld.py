@@ -18,19 +18,34 @@ class GameWorld():
 		self.base_hp = 10
 		self.money = 100
 		self.current_wave = 0
+		self.route = []
 
 
-	def add_tower(self, tower, pos, tower_type):
-		pass
+	def add_tower(self, tower, pos):
+		if tower.set_world(self, pos):
+			self.towers.append(tower)
+			return self.squares[pos[0]][pos[1]].set_tower(tower):
+		else:
+			return False
 
-	def add_enemy(self, enemy, pos, enemy_type):
-		pass
+	def add_enemy(self, enemy, pos):
+		if enemy.set_world(self, pos):
+			self.enemies.append(enemies)
+			return self.squares[pos[0]][pos[1]].set_enemy(enemy):
+		else:
+			return False
 
 	def remove_dead_enemies(self):
 		'''
-		Removes enemies which are dead, returns number of enemies removed
+		Remove enemies flagged as dead from the game
+		Returns amount of removed enemies
 		'''
-		pass
+		count = 0
+		for enemy in enemies:
+			if not enemy.is_alive():
+				self.enemies.remove(enemy)
+				count += 1
+		return count
 
 	def get_number_of_enemies(self):
 		'''
@@ -54,3 +69,10 @@ class GameWorld():
 		'''
 		Starts new wave by creating a spawner
 		'''
+		pass
+
+	def get_route(self):
+		'''
+		Returns the route for the current map
+		'''
+		return self.route
