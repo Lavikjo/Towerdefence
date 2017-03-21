@@ -14,10 +14,11 @@ class GameWorld():
 				self.squares[x][y] = Square(mapdata[x][y])
 		self.enemies = []
 		self.towers = []
-		self.waves = None
+		self.waves = []
 		self.base_hp = 10
 		self.money = 100
 		self.current_wave = 0
+		self.max_waves = None
 		self.route = []
 
 
@@ -69,7 +70,9 @@ class GameWorld():
 		'''
 		Starts new wave by creating a spawner
 		'''
-		pass
+		if not self.get_number_of_enemies():
+			self.current_wave += 1
+			wave_spawner = Spawner(self.waves[self.current_wave])
 
 	def get_route(self):
 		'''
