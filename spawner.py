@@ -8,7 +8,7 @@ class Spawner():
 		self.world = world
 		self.wave = wave
 		self.complete = False
-		self.random random.Random(seed)
+		self.random = random.Random(seed)
 		self.spawntimer = Timer(spawn_delay, self.spawn_enemy())
 		self.spawntimer.start()
 

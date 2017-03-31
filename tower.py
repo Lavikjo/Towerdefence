@@ -8,8 +8,8 @@ class TowerType(Enum):
 
 class Tower(Unit):
 
-	self.upgrade_levels = {UPGRADE_DMG: 1, UPGRADE_RANGE: 1, UPGRADE_SPEED: 1}
-	self.upgrades = {(UPGRADE_DMG, 1): 15}
+	#self.upgrade_levels = {UPGRADE_DMG: 1, UPGRADE_RANGE: 1, UPGRADE_SPEED: 1}
+	#self.upgrades = {(UPGRADE_DMG, 1): 15}
 
 	
 	def __init__(self, tower_type):
@@ -20,7 +20,7 @@ class Tower(Unit):
 		self.attack_speed = 1 # number of attack per second
 
 		self.attack_ready = True
-		self.cooldown_timer = Timer(1/attack_speed, self.set_ready())
+		self.cooldown_timer = Timer(1/self.attack_speed, self.set_ready())
 
 	def set_ready(self):
 		'''

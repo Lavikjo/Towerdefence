@@ -1,9 +1,9 @@
 class Unit():
 
-	def __init__(self):
+	def __init__(self, unit_type):
 		self.pos = None
 		self.world = None
-		self.type = None
+		self.type = unit_type
 
 	def get_pos(self):
 

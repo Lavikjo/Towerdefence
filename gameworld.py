@@ -29,14 +29,14 @@ class GameWorld():
 	def add_tower(self, tower, pos):
 		if tower.set_world(self, pos):
 			self.towers.append(tower)
-			return self.squares[pos[0]][pos[1]].set_tower(tower):
+			return self.squares[pos[0]][pos[1]].set_tower(tower)
 		else:
 			return False
 
 	def add_enemy(self, enemy, pos):
 		if enemy.set_world(self, pos):
-			self.enemies.append(enemies)
-			return self.squares[pos[0]][pos[1]].set_enemy(enemy):
+			self.enemies.append(enemy)
+			return self.squares[pos[0]][pos[1]].set_enemy(enemy)
 		else:
 			return False
 
@@ -92,6 +92,12 @@ class GameWorld():
 
 		return len(self.squares[0])
 
+	def get_square(self, pos):
+		if 0 <= pos[0] < self.get_width() and 0 <= pos[1] < self.get_height():
+			return self.squares[pos[0]][pos[1]]
+		else:
+			return Square(True)
+
 	def get_start_square(self):
 		'''
 		Returns start square if it's set, otherwise finds and sets it
@@ -104,3 +110,16 @@ class GameWorld():
 					if self.squares[x][y].is_start():
 						self.start_square = self.squares[x][y]
 						return self.start_square
+
+	def __str__(self):
+		return_string = ""
+		for x in range(self.get_width()):
+			for y in range(self.get_height()):
+				if self.squares[x][y].get_enemy():
+					return_string += 'x'
+				elif self.squares[x][y].get_tower():
+					return_string += 'T'
+				else:
+					return_string += str(self.squares[x][y].square_type.value)
+			return_string += '\n'
+		return return_string
