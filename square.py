@@ -40,7 +40,7 @@ class Square():
     def set_enemy(self, enemy):
         
         if self.is_empty():
-            if self.square_type is SquareType.ROUTE_SQUARE:
+            if self.square_type is not SquareType.TOWER_SQUARE:
                 self.enemy = enemy
                 return True
             else:
@@ -60,12 +60,12 @@ class Square():
             return False
 
     def remove_unit(self):
-        remove_unit = None
+        removed_unit = None
         if self.square_type is SquareType.TOWER_SQUARE and self.tower is not None:
             removed_unit = self.get_tower()
             self.tower = None
-        elif self.square_type is SquareType.ROUTE_SQUARE and self.enemy is not None:
-            remove_unit = self.get_enemy()
+        elif self.square_type is not SquareType.TOWER_SQUARE and self.enemy is not None:
+            removed_unit = self.get_enemy()
             self.enemy = None
         
         return removed_unit

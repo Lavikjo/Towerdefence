@@ -17,6 +17,10 @@ class Unit():
 
 		return self.type
 
+	def get_current_square(self):
+
+		return self.get_world().get_square(self.get_pos())
+
 	def set_type(self, new_type):
 
 		self.type = new_type

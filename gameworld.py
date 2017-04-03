@@ -78,6 +78,12 @@ class GameWorld():
 			self.current_wave += 1
 			wave_spawner = Spawner(self, self.waves[self.current_wave], 0.3, 100)
 
+	def set_route(self, route_data):
+		'''
+		Sets route data to world as possible coordinates
+		'''
+		self.route = route_data
+
 	def get_route(self):
 		'''
 		Returns the route for the current map
