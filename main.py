@@ -10,16 +10,14 @@ def main():
 
 	world.waves = [{'LIGHT_ENEMY':2, 'HEAVY_ENEMIES':1}]
 	tower1 = Tower(TowerType.BASIC_TOWER)
-	print(world.squares[0][0].square_type)
 	tulos = world.add_tower(tower1, (0, 0))
 	enemy1 = Enemy(EnemyType.LIGHT_ENEMY)
-	world.add_enemy(enemy1, (1,1))
-	print(world.squares[1][1].square_type)
-	print(enemy1.type)
-	print(tower1.type)
-	print(world.squares[0][0].tower)
-	print(world.towers[0].get_pos())
-	print(world)
+	world.add_enemy(enemy1, (1,0))
+	world.set_route([(1,0), (1,1), (2,1), (3,1), (4,1), (5,1)])
+	for i in range(5):
+		print(enemy1.get_pos())
+		print(world)
+		enemy1.move()
 
 if __name__ == '__main__':
 	main()
