@@ -28,7 +28,13 @@ class Enemy(Unit):
 		Moves to next square in the predefined route
 		'''
 		route = self.get_world().get_route()
+		current_square = self.get_current_square()
+		target_square = self.get_world().get_square(route[self.route_number+1])
+
+		current_square.remove_unit()
 		self.set_pos(route[self.route_number+1])
+		target_square.set_enemy(self)
+
 		self.route_number += 1
 
 	def damage(self, amount):
@@ -48,5 +54,5 @@ class Enemy(Unit):
 		'''
 		Checks if the current square enemy is standing on is the end goal
 		'''
-		current_square = self.get_world(self.get_pos()).get_square()
+		current_square = self.get_world().get_square(self.get_pos())
 		return current_square is SquareType.END_SQUARE
