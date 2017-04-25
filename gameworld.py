@@ -27,16 +27,16 @@ class GameWorld():
 		self.start_square = None
 
 	def add_tower(self, tower, pos):
-		if tower.set_world(self, pos):
+		if tower.set_world(self, pos) and self.squares[pos[0]][pos[1]].set_tower(tower):
 			self.towers.append(tower)
-			return self.squares[pos[0]][pos[1]].set_tower(tower)
+			return True
 		else:
 			return False
 
 	def add_enemy(self, enemy, pos):
-		if enemy.set_world(self, pos):
+		if enemy.set_world(self, pos) and self.squares[pos[0]][pos[1]].set_enemy(enemy):
 			self.enemies.append(enemy)
-			return self.squares[pos[0]][pos[1]].set_enemy(enemy)
+			return True
 		else:
 			return False
 
@@ -104,6 +104,12 @@ class GameWorld():
 	def get_height(self):
 
 		return len(self.squares[0])
+
+	def get_towers(self):
+		return self.towers
+
+	def get_enemies(self):
+		return self.enemies
 
 	def get_square(self, pos):
 		if 0 <= pos[0] < self.get_width() and 0 <= pos[1] < self.get_height():
