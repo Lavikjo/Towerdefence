@@ -14,9 +14,9 @@ def main():
 	tulos = world.add_tower(tower1, (1, 2))
 	enemy1 = Enemy(EnemyType.LIGHT_ENEMY)
 	enemy1.hp = 3
-	world.add_enemy(enemy1, (1,0))
-	world.set_route([(1,0), (1,1), (2,1), (3,1), (4,1)])
-	for i in range(4):
+	world.add_enemy(enemy1, (3,0))
+	#world.set_route([(1,0), (1,1), (2,1), (3,1), (4,1)])
+	for i in range(7):
 		enemy1.move()
 		#tower1.attack(enemy1)
 		print(enemy1.hp)

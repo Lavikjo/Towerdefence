@@ -4,6 +4,17 @@ from gameworld import *
 
 class MapReader():
 
+	def parse_route(map_width, map_height, map_data):
+		route = []
+
+		for y in range(map_height):
+			for x in range(map_width):
+				#print(map_data[x][y])
+				if map_data[x][y] in [SquareType.START_SQUARE, SquareType.ROUTE_SQUARE, SquareType.END_SQUARE]:
+					route.append((x, y))
+		print(route)
+		return route
+
 	def parse_mapgrid(filename):
 		root = ET.parse(filename).getroot()
 
@@ -15,9 +26,14 @@ class MapReader():
 			map_data[x] = [None] * map_height
 
 		for square in root.find('map_grid'):
-			print(square.attrib, square.text)
+			#print(square.attrib, square.text)
 			coords = square.attrib
-			map_data[int(coords['y'])][int(coords['x'])] = SquareType(int(square.text))
+			map_data[int(coords['x'])][int(coords['y'])] = SquareType(int(square.text))
 
 		world = GameWorld(map_width, map_height, map_data)
+		route = MapReader.parse_route(map_width, map_height, map_data)
+		world.set_route(route)
+
 		return world
+
+	
