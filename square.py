@@ -32,6 +32,12 @@ class Square():
 
         return self.square_type is SquareType.END_SQUARE
 
+    def is_route(self):
+        return self.square_type is SquareType.ROUTE_SQUARE
+
+    def is_tower(self):
+        return self.square_type is SquareType.TOWER_SQUARE
+
     def is_empty(self):
         
         return self.tower is None and self.enemy is None

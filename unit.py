@@ -30,7 +30,7 @@ class Unit():
 		self.pos = pos
 
 	def set_world(self, world, pos):
-
+		
 		if not world.get_square(pos).is_empty() or self.get_world() is not None:
 			return False
 		else:
