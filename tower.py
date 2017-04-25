@@ -15,12 +15,12 @@ class Tower(Unit):
 	def __init__(self, tower_type):
 		
 		super().__init__(tower_type)
-		self.damage = 10
-		self.range = 1 # range in squares to all cardinal directions
+		self.damage = 1
+		self.range = 3 # range in squares to all cardinal directions
 		self.attack_speed = 1 # number of attack per second
 
 		self.attack_ready = True
-		self.cooldown_timer = Timer(1/self.attack_speed, self.set_ready())
+		self.cooldown_timer = None
 
 	def set_ready(self):
 		'''
@@ -28,12 +28,16 @@ class Tower(Unit):
 		'''
 		self.attack_ready = True
 
+	def is_in_range(self, enemy):
+		#print((self.pos[0] - enemy.pos[0])**2 + (self.pos[1] - enemy.pos[1])**2)
+		return self.range**2 >= ((self.pos[0] - enemy.pos[0])**2 + (self.pos[1] - enemy.pos[1])**2)
+
 	def can_attack(self, enemy):
 		'''
 		Returns True if enemy is in range of tower and tower hasn't attacked recently
 		'''
-		if self.attack_ready:
-			pass
+		return enemy.hp > 0 and self.attack_ready and self.is_in_range(enemy)
+
 
 	def attack(self, enemy):
 		'''
@@ -42,7 +46,8 @@ class Tower(Unit):
 		'''
 		if self.can_attack(enemy):
 			enemy.damage(self.damage)
-			self.cooldown_timer.start()
+			self.attack_ready = False
+			self.cooldown_timer = Timer(1/self.attack_speed, self.set_ready())
 
 	def upgrade(self, upgrade_type):
 		upgrade_level = self.upgrade_levels[upgrade_type]
