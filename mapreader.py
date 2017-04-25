@@ -4,6 +4,12 @@ from gameworld import *
 
 class MapReader():
 
+	def parse_waves(root):
+		waves = []
+		for wave in root.find('waves'):
+			waves.append(wave.attrib)
+		return waves
+
 	def parse_route(map_width, map_height, map_data):
 		route = []
 
@@ -12,10 +18,10 @@ class MapReader():
 				#print(map_data[x][y])
 				if map_data[x][y] in [SquareType.START_SQUARE, SquareType.ROUTE_SQUARE, SquareType.END_SQUARE]:
 					route.append((x, y))
-		print(route)
+		#print(route)
 		return route
 
-	def parse_mapgrid(filename):
+	def parse_map(filename):
 		root = ET.parse(filename).getroot()
 
 		map_width = int(root[0].text)
@@ -33,6 +39,9 @@ class MapReader():
 		world = GameWorld(map_width, map_height, map_data)
 		route = MapReader.parse_route(map_width, map_height, map_data)
 		world.set_route(route)
+		waves = MapReader.parse_waves(root)
+		print(waves)
+		world.set_waves(waves)
 
 		return world
 

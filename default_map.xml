@@ -408,9 +408,9 @@
 
 
 	<waves>
-		<wave number="0" LIGHT_ENEMY="5" HEAVY_ENEMY="1"></wave>
-		<wave number="1" LIGHT_ENEMY="6" HEAVY_ENEMY="2"></wave>
-		<wave number="2" LIGHT_ENEMY="7" HEAVY_ENEMY="4"></wave>
+		<wave LIGHT_ENEMY="5" HEAVY_ENEMY="1">0</wave>
+		<wave LIGHT_ENEMY="6" HEAVY_ENEMY="2">1</wave>
+		<wave LIGHT_ENEMY="7" HEAVY_ENEMY="4">2</wave>
 	</waves>
 
 </map_data>

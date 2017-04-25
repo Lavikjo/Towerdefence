@@ -70,6 +70,13 @@ class GameWorld():
 				self.base_hp -= amount
 				return False
 
+	def set_waves(self, waves):
+		'''
+		Sets wave data for the world
+		'''
+		self.waves = waves
+		self.max_waves = len(waves)
+
 	def next_wave(self):
 		'''
 		Starts new wave by creating a spawner
@@ -111,16 +118,16 @@ class GameWorld():
 		if self.start_square:
 			return self.start_square
 		else:
-			for x in range(self.get_width()):
-				for y in range(self.get_height()):
+			for y in range(self.get_height()):
+				for x in range(self.get_width()):
 					if self.squares[x][y].is_start():
 						self.start_square = self.squares[x][y]
 						return self.start_square
 
 	def __str__(self):
 		return_string = ""
-		for x in range(self.get_width()):
-			for y in range(self.get_height()):
+		for y in range(self.get_height()):
+			for x in range(self.get_width()):
 				if self.squares[x][y].get_enemy():
 					return_string += 'x'
 				elif self.squares[x][y].get_tower():

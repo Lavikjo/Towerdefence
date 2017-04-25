@@ -7,9 +7,8 @@ def main():
 
 	#map_data = [[2, 2, 2, 2, 2], [0, 1, 2, 2, 2], [2, 1, 2, 2, 2], [2, 1, 2, 2, 2], [2, 3, 2, 2, 2]]
 	#map_data2 = [[SquareType(x) for x in y] for y in map_data]
-	world = MapReader.parse_mapgrid("default_map.xml")
-
-	world.waves = [{'LIGHT_ENEMY':2, 'HEAVY_ENEMIES':1}]
+	world = MapReader.parse_map("default_map.xml")
+	#world.waves = [{'LIGHT_ENEMY':2, 'HEAVY_ENEMIES':1}]
 	tower1 = Tower(TowerType.BASIC_TOWER)
 	tulos = world.add_tower(tower1, (1, 2))
 	enemy1 = Enemy(EnemyType.LIGHT_ENEMY)
