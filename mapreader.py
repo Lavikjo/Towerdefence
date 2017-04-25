@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 from square import SquareType
+from gameworld import *
 
 class MapReader():
 
@@ -13,4 +14,10 @@ class MapReader():
 		for x in range(map_width):
 			map_data[x] = [None] * map_height
 
-		return map_data
+		for square in root.find('map_grid'):
+			print(square.attrib, square.text)
+			coords = square.attrib
+			map_data[int(coords['y'])][int(coords['x'])] = SquareType(int(square.text))
+
+		world = GameWorld(map_width, map_height, map_data)
+		return world
