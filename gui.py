@@ -20,11 +20,11 @@ class GUI(QtWidgets.QMainWindow):
 		self.add_map_grid_items()
 		self.add_tower_graphics_items()
 		self.add_enemy_graphics_items()
-		self.update_logic()
+		self.update_all()
 
 		self.logic_timer = QtCore.QTimer()
-		self.logic_timer.timeout.connect(self.update_logic)
-		self.logic_timer.start(10)
+		self.logic_timer.timeout.connect(self.update_all)
+		self.logic_timer.start(2000)
 
 		
 
@@ -67,11 +67,23 @@ class GUI(QtWidgets.QMainWindow):
 			self.enemy_graphics_items.append(enemy_graphic)
 			self.scene.addItem(enemy_graphic)
 
+	def update_all(self):
+		self.update_logic()
+		self.update_graphics()
+
+	def update_graphics(self):
+		for enemy_graphic in self.enemy_graphics_items:
+			enemy_graphic.update()
+		for tower_graphic in self.tower_graphics_items:
+			tower_graphic.update()
+
 	def update_logic(self):
 		self.update_enemies()
 
 	def update_enemies(self):
-		pass
+		enemies = self.world.get_enemies()
+		for enemy in enemies:
+			enemy.move()
 
 	def init_buttons(self):
 		self.tower_btn = QtWidgets.QPushButton("Tower 1")
