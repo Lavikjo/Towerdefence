@@ -10,15 +10,28 @@ class MapReader():
 			waves.append(wave.attrib)
 		return waves
 
-	def parse_route(map_width, map_height, map_data):
+	def parse_route(world, map_data):
 		route = []
+		start_square = world.get_start_square()
+		route.append(start_square)
+		previous_pos = start_square
+		current_pos = previous_pos
+		neigbours = [(1, 0), (0, 1), (-1, 0), (0, -1)]
 
-		for y in range(map_height):
-			for x in range(map_width):
-				#print(map_data[x][y])
-				if map_data[x][y] in [SquareType.START_SQUARE, SquareType.ROUTE_SQUARE, SquareType.END_SQUARE]:
-					route.append((x, y))
-		#print(route)
+		while map_data[current_pos[0]][current_pos[1]] is not SquareType.END_SQUARE:
+			# generate neighbour coordinates in cardinal directions relative to current position
+			neighbour_coordinates = [tuple(map(sum, zip(current_pos, coord))) for coord in neigbours]
+			
+			#print(neighbour_coordinates)
+			for x in neighbour_coordinates:
+				#print(x != previous_pos)
+				if x != previous_pos and world.get_square(x).square_type in [SquareType.ROUTE_SQUARE, SquareType.END_SQUARE]:
+					route.append(x)
+					break
+
+			previous_pos = current_pos
+			current_pos = x
+					
 		return route
 
 	def parse_map(filename):
@@ -37,7 +50,7 @@ class MapReader():
 			map_data[int(coords['x'])][int(coords['y'])] = SquareType(int(square.text))
 
 		world = GameWorld(map_width, map_height, map_data)
-		route = MapReader.parse_route(map_width, map_height, map_data)
+		route = MapReader.parse_route(world, map_data)
 		world.set_route(route)
 		waves = MapReader.parse_waves(root)
 		print(waves)

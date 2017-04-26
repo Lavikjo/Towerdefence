@@ -15,7 +15,7 @@ def main():
 	tower2 = Tower(TowerType.BASIC_TOWER)
 	world.add_tower(tower2, (1, 0))
 	enemy1 = Enemy(EnemyType.LIGHT_ENEMY)
-	world.add_enemy(enemy1, (3, 2))
+	world.add_enemy(enemy1, (0, 2))
 	
 	
 	app = QApplication(sys.argv)

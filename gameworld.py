@@ -24,7 +24,7 @@ class GameWorld():
 		self.max_waves = None
 		
 		self.route = []
-		self.start_square = None
+		self.start_square_pos = None
 
 	def add_tower(self, tower, pos):
 		if tower.set_world(self, pos) and self.squares[pos[0]][pos[1]].set_tower(tower):
@@ -121,14 +121,14 @@ class GameWorld():
 		'''
 		Returns start square if it's set, otherwise finds and sets it
 		'''
-		if self.start_square:
-			return self.start_square
+		if self.start_square_pos:
+			return self.start_square_pos
 		else:
 			for y in range(self.get_height()):
 				for x in range(self.get_width()):
 					if self.squares[x][y].is_start():
-						self.start_square = self.squares[x][y]
-						return self.start_square
+						self.start_square_pos = (x, y)
+						return self.start_square_pos
 
 	def __str__(self):
 		return_string = ""
