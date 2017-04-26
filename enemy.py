@@ -29,6 +29,13 @@ class Enemy(Unit):
 		'''
 		route = self.get_world().get_route()
 		current_square = self.get_current_square()
+
+		if self.route_number == len(route) - 1:
+			current_square.remove_unit()
+			self.alive = False
+			self.get_world().damage_base(1)
+			return
+
 		target_square = self.get_world().get_square(route[self.route_number+1])
 
 		current_square.remove_unit()

@@ -46,8 +46,10 @@ class GameWorld():
 		Returns amount of removed enemies
 		'''
 		count = 0
-		for enemy in enemies:
+		for enemy in self.enemies:
 			if not enemy.is_alive():
+				pos = enemy.get_pos()
+				self.squares[pos[0]][pos[1]].remove_unit()
 				self.enemies.remove(enemy)
 				count += 1
 		return count
