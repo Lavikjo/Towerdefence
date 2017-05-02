@@ -17,8 +17,9 @@ class QScene(QtWidgets.QGraphicsScene):
 			print(coord)
 			try:
 				square = self.gui.world.squares[coord[0]][coord[1]]
-				if square.get_tower():
-					self.gui.selection_label.setText("Selected tower: {}".format(coord))
+				tower = square.get_tower()
+				if tower:
+					self.gui.selection_label.setText("{}: {}".format(str(tower.type).split(".")[-1] ,coord))
 					self.gui.selected_unit = None
 				if unit:
 					self.gui.selection_label.setText("")
@@ -129,6 +130,7 @@ class GUI(QtWidgets.QMainWindow):
 			tower_graphic.update()
 
 		self.update_labels()
+
 
 	def update_labels(self):
 		self.money_label.setText("Money: {}".format(self.world.money))

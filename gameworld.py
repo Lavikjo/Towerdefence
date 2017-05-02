@@ -26,6 +26,8 @@ class GameWorld():
 		self.route = []
 		self.start_square_pos = None
 
+		self.configs = {}
+
 	def add_tower(self, tower, pos):
 		if tower.set_world(self, pos) and self.squares[pos[0]][pos[1]].set_tower(tower):
 			if self.money >= tower.cost:
@@ -133,6 +135,9 @@ class GameWorld():
 					if self.squares[x][y].is_start():
 						self.start_square_pos = (x, y)
 						return self.start_square_pos
+
+	def add_config(self, configs):
+		self.configs = configs
 
 	def __str__(self):
 		return_string = ""
