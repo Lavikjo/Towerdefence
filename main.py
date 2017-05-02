@@ -9,11 +9,6 @@ from gui import GUI
 
 def main():
 	world = MapReader.parse_map("default_map.xml")
-
-	tower1 = Tower(TowerType.BASIC_TOWER)
-	tulos = world.add_tower(tower1, (1, 1))
-	tower2 = Tower(TowerType.BASIC_TOWER)
-	world.add_tower(tower2, (1, 0))
 	enemy1 = Enemy(EnemyType.LIGHT_ENEMY)
 	world.add_enemy(enemy1, (0, 2))
 	

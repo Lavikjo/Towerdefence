@@ -4,6 +4,30 @@ from enemy_graphics_item import EnemyGraphicsItem
 from tower import TowerType, Tower
 from functools import partial
 
+class QScene(QtWidgets.QGraphicsScene):
+	def __init__(self, gui):
+		QtWidgets.QGraphicsScene.__init__(self)
+		self.gui = gui
+
+	def mousePressEvent(self, ev):
+		if ev.button() == QtCore.Qt.LeftButton:
+			pos = ev.scenePos()
+			unit = self.gui.selected_unit
+			coord = (int(pos.x() / self.gui.square_size), int(pos.y() / self.gui.square_size))
+			print(coord)
+			try:
+				square = self.gui.world.squares[coord[0]][coord[1]]
+				if square.get_tower():
+					self.gui.selection_label.setText("Selected tower: {}".format(coord))
+					self.gui.selected_unit = None
+				if unit:
+					self.gui.selection_label.setText("")
+					self.gui.selected_unit = None
+					self.gui.world.add_tower(unit, coord)
+			except IndexError:
+				print("Click out of screen!")
+
+
 class GUI(QtWidgets.QMainWindow):
 	
 	def __init__(self, world, square_size):
@@ -19,8 +43,8 @@ class GUI(QtWidgets.QMainWindow):
 		self.horizontal.addWidget(self.side_widget)
 		self.centralWidget().setLayout(self.horizontal)
 
-		self.button_layout = QtWidgets.QGridLayout()
-		self.button_layout.setColumnStretch(1, 20)
+		self.button_layout = QtWidgets.QVBoxLayout()
+		#self.button_layout.setColumnStretch(1, 20)
 
 		self.side_widget.setLayout(self.button_layout)
 		self.game_widget.setLayout(self.game_layout)
@@ -36,7 +60,6 @@ class GUI(QtWidgets.QMainWindow):
 		self.add_map_grid_items()
 		self.add_tower_graphics_items()
 		self.add_enemy_graphics_items()
-		self.update_all()
 
 		self.logic_timer = QtCore.QTimer()
 		self.logic_timer.timeout.connect(self.update_logic)
@@ -96,13 +119,19 @@ class GUI(QtWidgets.QMainWindow):
 		self.update_graphics()
 
 	def update_graphics(self):
+		self.add_tower_graphics_items()
 		self.remove_dead_graphics()
+		
 
 		for enemy_graphic in self.enemy_graphics_items:
 			enemy_graphic.update()
 		for tower_graphic in self.tower_graphics_items:
 			tower_graphic.update()
 
+		self.update_labels()
+
+	def update_labels(self):
+		self.money_label.setText("Money: {}".format(self.world.money))
 
 	def update_logic(self):
 		self.update_enemies()
@@ -120,6 +149,7 @@ class GUI(QtWidgets.QMainWindow):
 		'''
 
 		self.selected_unit = Tower(tower_type)
+		self.selection_label.setText("Selected: {}".format(tower_type).split(".")[-1])
 
 	def init_buttons(self):
 
@@ -127,21 +157,27 @@ class GUI(QtWidgets.QMainWindow):
 		self.button_layout.addWidget(self.tower_btn)
 		self.tower_btn.clicked.connect(partial(self.place_tower, TowerType.BASIC_TOWER))
 		self.tower_btn2 = QtWidgets.QPushButton("Laser")
-		self.tower_btn.clicked.connect(partial(self.place_tower, TowerType.STRONG_TOWER))
+		self.tower_btn2.clicked.connect(partial(self.place_tower, TowerType.STRONG_TOWER))
 		self.button_layout.addWidget(self.tower_btn2)
 
 	def init_window(self):
 
-		self.setGeometry(900, 900, 900, 900)
+		self.setGeometry(900, 900, 900, 640)
 		self.setWindowTitle('Yet Another Tower Defense')
 		self.show()
 
-		self.scene = QtWidgets.QGraphicsScene()
-		self.scene.setSceneRect(0, 0, 850, 850)
+		self.scene = QScene(self)
+		self.scene.setSceneRect(0, 0, 600, 600)
 
 		self.view = QtWidgets.QGraphicsView(self.scene, self)
 		self.view.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 		self.view.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 		self.view.adjustSize()
 		self.view.show()
+
 		self.game_layout.addWidget(self.view)
+
+		self.money_label = QtWidgets.QLabel()
+		self.selection_label = QtWidgets.QLabel()
+		self.button_layout.addWidget(self.money_label)
+		self.button_layout.addWidget(self.selection_label)

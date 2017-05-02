@@ -21,6 +21,7 @@ class Tower(Unit):
 
 		self.attack_ready = True
 		self.cooldown_timer = None
+		self.cost = 50
 
 	def set_ready(self):
 		'''

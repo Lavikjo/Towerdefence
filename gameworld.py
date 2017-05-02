@@ -28,8 +28,10 @@ class GameWorld():
 
 	def add_tower(self, tower, pos):
 		if tower.set_world(self, pos) and self.squares[pos[0]][pos[1]].set_tower(tower):
-			self.towers.append(tower)
-			return True
+			if self.money >= tower.cost:
+				self.money -= tower.cost
+				self.towers.append(tower)
+				return True
 		else:
 			return False
 
