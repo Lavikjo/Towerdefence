@@ -1,19 +1,35 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 from tower_graphics_item import TowerGraphicsItem
 from enemy_graphics_item import EnemyGraphicsItem
+from tower import TowerType, Tower
+from functools import partial
 
 class GUI(QtWidgets.QMainWindow):
 	
 	def __init__(self, world, square_size):
 		super().__init__()
-		self.setCentralWidget(QtWidgets.QWidget())
+		self.main_widget = QtWidgets.QWidget()
+		self.setCentralWidget(self.main_widget)
 		self.horizontal = QtWidgets.QHBoxLayout()
+		self.game_widget = QtWidgets.QWidget()
+		self.side_widget = QtWidgets.QWidget()
+		self.game_layout = QtWidgets.QHBoxLayout()
+
+		self.horizontal.addWidget(self.game_widget)
+		self.horizontal.addWidget(self.side_widget)
 		self.centralWidget().setLayout(self.horizontal)
+
+		self.button_layout = QtWidgets.QGridLayout()
+		self.button_layout.setColumnStretch(1, 20)
+
+		self.side_widget.setLayout(self.button_layout)
+		self.game_widget.setLayout(self.game_layout)
+
 		self.world = world
 		self.square_size = square_size
 		self.tower_graphics_items = []
 		self.enemy_graphics_items = []
-
+		self.selected_unit = None
 
 		self.init_window()
 		self.init_buttons()
@@ -98,11 +114,24 @@ class GUI(QtWidgets.QMainWindow):
 			if enemy.is_alive():
 				enemy.move()
 
+	def place_tower(self, tower_type):
+		'''
+		Sets spesific tower type as active unit
+		'''
+
+		self.selected_unit = Tower(tower_type)
+
 	def init_buttons(self):
-		self.tower_btn = QtWidgets.QPushButton("Tower 1")
-		self.horizontal.addWidget(self.tower_btn)
+
+		self.tower_btn = QtWidgets.QPushButton("Electric")
+		self.button_layout.addWidget(self.tower_btn)
+		self.tower_btn.clicked.connect(partial(self.place_tower, TowerType.BASIC_TOWER))
+		self.tower_btn2 = QtWidgets.QPushButton("Laser")
+		self.tower_btn.clicked.connect(partial(self.place_tower, TowerType.STRONG_TOWER))
+		self.button_layout.addWidget(self.tower_btn2)
 
 	def init_window(self):
+
 		self.setGeometry(900, 900, 900, 900)
 		self.setWindowTitle('Yet Another Tower Defense')
 		self.show()
@@ -111,6 +140,8 @@ class GUI(QtWidgets.QMainWindow):
 		self.scene.setSceneRect(0, 0, 850, 850)
 
 		self.view = QtWidgets.QGraphicsView(self.scene, self)
+		self.view.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+		self.view.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 		self.view.adjustSize()
 		self.view.show()
-		self.horizontal.addWidget(self.view)
+		self.game_layout.addWidget(self.view)
