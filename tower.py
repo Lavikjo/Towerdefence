@@ -14,16 +14,17 @@ class Tower(Unit):
 	#self.upgrades = {(UPGRADE_DMG, 1): 15}
 
 	
-	def __init__(self, tower_type):
+	def __init__(self, tower_type, configs):
 		
-		super().__init__(tower_type)
-		self.damage = 1
-		self.range = 1 # range in squares to all cardinal directions
-		self.attack_speed = 0.6 # number of attack per second
+		super().__init__(tower_type, configs)
+		
+		self.damage = int(self.configs[tower_type.name]['Damage'])
+		self.range = int(self.configs[tower_type.name]['Range']) # range in squares to all cardinal directions
+		self.attack_speed = float(self.configs[tower_type.name]['Attack_Speed']) # number of attack per second
+		self.cost = int(self.configs[tower_type.name]['Cost'])
 
 		self.attack_cooldown = 0
-		self.cost = 50
-
+		
 	def set_ready(self):
 		'''
 		Sets tower attack-status to ready
@@ -88,7 +89,6 @@ class Tower(Unit):
 			random = Random(300)
 			chosen_enemy = random.choice(found_enemies)
 			chosen_enemy.damage(self.damage)
-			print("attacked!")
 			return True
 		else:
 			return False

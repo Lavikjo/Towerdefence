@@ -13,7 +13,7 @@ class TowerGraphicsItem(QtWidgets.QGraphicsPixmapItem):
 
 
 	def set_graphics(self):
-		offset = 0
+		offset = int(self.tower.configs[self.tower.type.name]['Graphic_Offset'])
 		original = QtGui.QPixmap("textures/tilemap.png")
 		
 		rect = QtCore.QRect(64*offset, 64*offset, 64*(offset+1), 64*(offset+1))

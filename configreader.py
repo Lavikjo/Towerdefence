@@ -36,5 +36,4 @@ class ConfigReader:
 		root = ET.parse(filename).getroot()
 		configs["EnemyData"] = ConfigReader.parse_enemies(root)
 		configs["TowerData"] = ConfigReader.parse_towers(root)
-
 		return configs

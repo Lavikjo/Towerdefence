@@ -10,13 +10,15 @@ class EnemyType(Enum):
 
 class Enemy(Unit):
 
-	def __init__(self, enemy_type):
+	def __init__(self, enemy_type, configs):
 		
-		super().__init__(enemy_type)
-		self.speed = 1
-		self.prize = 0
+		super().__init__(enemy_type, configs)
+		self.speed = float(self.configs[enemy_type.name]['Speed'])
+		self.prize = int(self.configs[enemy_type.name]['Prize'])
+		self.hp = int(self.configs[enemy_type.name]['Health'])
+		self.base_damage = int(self.configs[enemy_type.name]['Damage'])
 		self.alive = True
-		self.hp = 2
+
 		self.route_number = 0
 		self.move_threshold = 0
 
@@ -62,6 +64,7 @@ class Enemy(Unit):
 			'''
 			if (self.hp - amount) <= 0:
 				self.hp = 0
+				self.world.money += self.prize
 				self.alive = False
 				return True
 			else:

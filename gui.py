@@ -163,7 +163,7 @@ class GUI(QtWidgets.QMainWindow):
 		Sets spesific tower type as active unit
 		'''
 
-		self.selected_unit = Tower(tower_type)
+		self.selected_unit = Tower(tower_type, self.world.configs['TowerData'])
 		self.selection_label.setText("Selected: {}".format(tower_type).split(".")[-1])
 
 	def init_buttons(self):

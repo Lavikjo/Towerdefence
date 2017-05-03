@@ -32,7 +32,7 @@ class Spawner():
 		enemy_type = self.next_enemy()
 		if not self.complete:
 			self.wave[enemy_type] -= 1
-			enemy = Enemy(EnemyType[enemy_type])
+			enemy = Enemy(EnemyType[enemy_type], self.world.configs['EnemyData'])
 			self.world.add_enemy(enemy, self.world.get_start_square())	
 			
 	def update(self, dt):

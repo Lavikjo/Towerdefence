@@ -1,6 +1,7 @@
 class Unit():
 
-	def __init__(self, unit_type):
+	def __init__(self, unit_type, configs):
+		self.configs = configs
 		self.pos = None
 		self.world = None
 		self.type = unit_type
