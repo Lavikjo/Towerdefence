@@ -22,6 +22,14 @@ class EnemyGraphicsItem(QtWidgets.QGraphicsPixmapItem):
 
 		self.setPixmap(tile)
 
+	def interpolate(self, start, end, t):
+		return ((1 - t)*start[0] + t*end[0], (1 - t)*start[1] + t*end[1])
+
 	def update(self):
-		pos = self.enemy.get_pos()
-		self.setPos(pos[0]*self.square_size, pos[1]*self.square_size)
+		world = self.enemy.get_world()
+		current_pos = self.enemy.get_pos()
+		next_pos = world.get_route()[self.enemy.route_number + 1]
+		t = self.enemy.move_threshold
+
+		graphic_pos = self.interpolate(current_pos, next_pos, t)
+		self.setPos(graphic_pos[0]*self.square_size, graphic_pos[1]*self.square_size)

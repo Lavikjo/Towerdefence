@@ -60,7 +60,7 @@ class GUI(QtWidgets.QMainWindow):
 		self.add_tower_graphics_items()
 		self.add_enemy_graphics_items()
 
-		self.dt = 300
+		self.dt = 1/60*1000
 		self.logic_timer = QtCore.QTimer()
 		self.logic_timer.timeout.connect(self.update_logic)
 		self.logic_timer.start(self.dt)
@@ -156,7 +156,7 @@ class GUI(QtWidgets.QMainWindow):
 		enemies = self.world.get_enemies()
 		for enemy in enemies:
 			if enemy.is_alive():
-				enemy.move()
+				enemy.update(self.dt)
 
 	def place_tower(self, tower_type):
 		'''

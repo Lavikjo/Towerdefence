@@ -18,11 +18,21 @@ class Enemy(Unit):
 		self.alive = True
 		self.hp = 2
 		self.route_number = 0
+		self.move_threshold = 0
 
 	def is_alive(self):
 
 		return self.alive
 
+	def update(self, dt):
+		# threshold reached, move to next square
+		if self.move_threshold >= 1:
+			self.move()
+			self.move_threshold = 0
+		# threshold not reached, increase by logic timestep multiplied with speed
+		elif self.move_threshold < 1:
+			self.move_threshold += self.speed*dt/1000
+	
 	def move(self):
 		'''
 		Moves to next square in the predefined route

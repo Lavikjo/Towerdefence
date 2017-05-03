@@ -21,7 +21,7 @@ class TowerGraphicsItem(QtWidgets.QGraphicsPixmapItem):
 		tile = original.copy(rect).scaled(self.square_size, self.square_size)
 
 		self.setPixmap(tile)
-
+	
 	def update(self):
 		pos = self.tower.get_pos()
 		self.setPos(pos[0]*self.square_size, pos[1]*self.square_size)
