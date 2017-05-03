@@ -88,9 +88,11 @@ class GameWorld():
 		'''
 		Starts new wave by creating a spawner
 		'''
-		if not self.get_number_of_enemies() and self.wave_spawner is None:
-			self.current_wave += 1
+		print(len(self.waves))
+		print(self.current_wave)
+		if not self.get_number_of_enemies() and self.wave_spawner is None and self.current_wave is not len(self.waves):
 			self.wave_spawner = Spawner(self, self.waves[self.current_wave], 0.3, 100)
+			self.current_wave += 1
 
 	def set_route(self, route_data):
 		'''

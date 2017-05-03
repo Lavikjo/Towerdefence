@@ -142,7 +142,7 @@ class GUI(QtWidgets.QMainWindow):
 		
 
 	def update_spawner(self):
-		if self.world.wave_spawner is not None:
+		if self.world.wave_spawner is not None and not self.world.wave_spawner.complete:
 			self.world.wave_spawner.update(self.dt)
 		else:
 			self.world.wave_spawner = None

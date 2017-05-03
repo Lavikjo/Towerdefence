@@ -13,7 +13,6 @@ def main():
 	world.add_config(ConfigReader.parse_config("default_config.xml"))
 	#enemy1 = Enemy(EnemyType.LIGHT_ENEMY)
 	#world.add_enemy(enemy1, (0, 2))
-	world.next_wave()
 	
 	app = QApplication(sys.argv)
 	gui = GUI(world, 30)
