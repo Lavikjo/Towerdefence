@@ -6,7 +6,8 @@
 			<Attack_Speed>0.7</Attack_Speed>
 			<Range>3</Range>
 			<Cost>20</Cost>
-			<Graphic_Offset>0</Graphic_Offset>
+			<Graphic_Offset_X>0</Graphic_Offset_X>
+			<Graphic_Offset_Y>0</Graphic_Offset_Y>
 		</BASIC_TOWER>
 
 		<STRONG_TOWER>
@@ -14,7 +15,8 @@
 			<Attack_Speed>2</Attack_Speed>
 			<Range>3</Range>
 			<Cost>50</Cost>
-			<Graphic_Offset>1</Graphic_Offset>
+			<Graphic_Offset_X>1</Graphic_Offset_X>
+			<Graphic_Offset_Y>0</Graphic_Offset_Y>
 		</STRONG_TOWER>
 	</TowerData>
 
@@ -24,7 +26,8 @@
 			<Health>6</Health>
 			<Damage>1</Damage>
 			<Prize>5</Prize>
-			<Graphic_Offset>2</Graphic_Offset>
+			<Graphic_Offset_X>2</Graphic_Offset_X>
+			<Graphic_Offset_Y>0</Graphic_Offset_Y>
 		</LIGHT_ENEMY>
 
 		<HEAVY_ENEMY>
@@ -32,7 +35,8 @@
 			<Health>20</Health>
 			<Damage>2</Damage>
 			<Prize>10</Prize>
-			<Graphic_Offset>3</Graphic_Offset>
+			<Graphic_Offset_X>3</Graphic_Offset_X>
+			<Graphic_Offset_Y>0</Graphic_Offset_Y>
 		</HEAVY_ENEMY>
 
 		<FAST_ENEMY>
@@ -40,7 +44,8 @@
 			<Health>8</Health>
 			<Damage>1</Damage>
 			<Prize>8</Prize>
-			<Graphic_Offset>4</Graphic_Offset>
+			<Graphic_Offset_X>4</Graphic_Offset_X>
+			<Graphic_Offset_Y>0</Graphic_Offset_Y>
 		</FAST_ENEMY>
 	</EnemyData>
 </Configs>

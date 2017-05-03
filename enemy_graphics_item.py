@@ -13,13 +13,15 @@ class EnemyGraphicsItem(QtWidgets.QGraphicsPixmapItem):
 
 
 	def set_graphics(self):
-		offset = int(self.enemy.configs[self.enemy.type.name]['Graphic_Offset'])
+		offset_x = int(self.enemy.configs[self.enemy.type.name]['Graphic_Offset_X'])
+		offset_y = int(self.enemy.configs[self.enemy.type.name]['Graphic_Offset_Y'])
 		original = QtGui.QPixmap("textures/tilemap.png")
 		
-		rect = QtCore.QRect(64*offset, 64*offset, 64*(offset+1), 64*(offset+1))
+		rect = QtCore.QRect(64*offset_x, 64*offset_y, 64, 64)
 		tile = QtGui.QPixmap()
 		tile = original.copy(rect).scaled(self.square_size, self.square_size)
 
+		tile.setMask(tile.createHeuristicMask())
 		self.setPixmap(tile)
 
 	def interpolate(self, start, end, t):
