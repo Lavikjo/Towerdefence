@@ -1,6 +1,5 @@
 from unit import Unit
 from enum import Enum
-from threading import Timer
 from random import Random, choice
 from collections import deque
 from square import SquareType
@@ -20,10 +19,9 @@ class Tower(Unit):
 		super().__init__(tower_type)
 		self.damage = 1
 		self.range = 1 # range in squares to all cardinal directions
-		self.attack_speed = 1 # number of attack per second
+		self.attack_speed = 0.6 # number of attack per second
 
-		self.attack_ready = True
-		self.cooldown_timer = None
+		self.attack_cooldown = 0
 		self.cost = 50
 
 	def set_ready(self):
@@ -71,19 +69,30 @@ class Tower(Unit):
 			found_enemies.extend(world.get_square(coord).get_enemies())
 		return found_enemies
 
-	def attack(self, route):
+	def update(self, dt):
+		# no cooldown, spawn enemy
+		if self.attack_cooldown <= 0:
+			if self.attack():
+				self.attack_cooldown += 1/self.attack_speed
+		# cooldown not expired, decrease it by logic timestep
+		elif self.attack_cooldown > 0:
+			self.attack_cooldown -= dt/1000
+	def attack(self):
 		'''
 		Checks if tower can attack and deals damage to random enemy
 		After attacking starts the cooldown timer
 		'''	
-		if self.attack_ready:
-			found_enemies = self.find_enemies(self.coords_in_route(route))
-			if bool(found_enemies):
-				random = Random(300)
-				chosen_enemy = random.choice(found_enemies)
-				chosen_enemy.damage(self.damage)
-				self.attack_ready = False
-				self.cooldown_timer = Timer(1/self.attack_speed, self.set_ready())
+		route = self.get_world().get_route()
+		found_enemies = self.find_enemies(self.coords_in_route(route))
+		if bool(found_enemies):
+			random = Random(300)
+			chosen_enemy = random.choice(found_enemies)
+			chosen_enemy.damage(self.damage)
+			print("attacked!")
+			return True
+		else:
+			return False
+				
 
 	def upgrade(self, upgrade_type):
 		upgrade_level = self.upgrade_levels[upgrade_type]

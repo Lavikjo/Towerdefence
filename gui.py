@@ -149,7 +149,7 @@ class GUI(QtWidgets.QMainWindow):
 
 	def update_towers(self):
 		for tower in self.world.get_towers():
-			tower.attack(self.world.get_route())
+			tower.update(self.dt)
 
 	def update_enemies(self):
 		self.world.remove_dead_enemies()

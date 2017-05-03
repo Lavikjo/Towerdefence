@@ -1,4 +1,3 @@
-from threading import Timer
 from random import Random, choice
 from enemy import Enemy, EnemyType
 
@@ -34,9 +33,7 @@ class Spawner():
 		if not self.complete:
 			self.wave[enemy_type] -= 1
 			enemy = Enemy(EnemyType[enemy_type])
-			self.world.add_enemy(enemy, self.world.get_start_square())
-				
-		
+			self.world.add_enemy(enemy, self.world.get_start_square())	
 			
 	def update(self, dt):
 

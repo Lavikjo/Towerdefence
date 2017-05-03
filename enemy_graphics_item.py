@@ -28,8 +28,13 @@ class EnemyGraphicsItem(QtWidgets.QGraphicsPixmapItem):
 	def update(self):
 		world = self.enemy.get_world()
 		current_pos = self.enemy.get_pos()
-		next_pos = world.get_route()[self.enemy.route_number + 1]
-		t = self.enemy.move_threshold
+		try:
+			next_pos = world.get_route()[self.enemy.route_number + 1]
 
-		graphic_pos = self.interpolate(current_pos, next_pos, t)
-		self.setPos(graphic_pos[0]*self.square_size, graphic_pos[1]*self.square_size)
+			t = self.enemy.move_threshold
+
+			graphic_pos = self.interpolate(current_pos, next_pos, t)
+			self.setPos(graphic_pos[0]*self.square_size, graphic_pos[1]*self.square_size)
+		except IndexError:
+			# Handles corner case with graphical item reaching the end before logic removes dead enemy
+			return
