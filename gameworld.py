@@ -53,7 +53,7 @@ class GameWorld():
 		for enemy in self.enemies:
 			if not enemy.is_alive():
 				pos = enemy.get_pos()
-				self.squares[pos[0]][pos[1]].remove_unit()
+				self.squares[pos[0]][pos[1]].remove_unit(enemy)
 				self.enemies.remove(enemy)
 				count += 1
 		return count
@@ -143,7 +143,7 @@ class GameWorld():
 		return_string = ""
 		for y in range(self.get_height()):
 			for x in range(self.get_width()):
-				if self.squares[x][y].get_enemy():
+				if self.squares[x][y].get_enemies():
 					return_string += 'x'
 				elif self.squares[x][y].get_tower():
 					return_string += 'T'

@@ -13,16 +13,16 @@ class Square():
     def __init__(self, square_type):
         
         self.tower = None
-        self.enemy = None     
+        self.enemies = []     
         self.square_type = square_type
 
     def get_tower(self):
 
         return self.tower
 
-    def get_enemy(self):
+    def get_enemies(self):
         
-        return self.enemy
+        return self.enemies
 
     def is_start(self):
         
@@ -40,17 +40,14 @@ class Square():
 
     def is_empty(self):
         
-        return self.tower is None and self.enemy is None
+        return self.tower is None and not bool(self.enemies)
 
 
     def set_enemy(self, enemy):
-        
-        if self.is_empty():
-            if self.square_type is not SquareType.TOWER_SQUARE:
-                self.enemy = enemy
-                return True
-            else:
-                return False
+
+        if self.square_type is not SquareType.TOWER_SQUARE:
+            self.enemies.append(enemy)
+            return True
         else:
             return False
 
@@ -65,14 +62,10 @@ class Square():
         else:
             return False
 
-    def remove_unit(self):
-        removed_unit = None
+    def remove_unit(self, unit = None):
         if self.square_type is SquareType.TOWER_SQUARE and self.tower is not None:
-            removed_unit = self.get_tower()
             self.tower = None
-        elif self.square_type is not SquareType.TOWER_SQUARE and self.enemy is not None:
-            removed_unit = self.get_enemy()
-            self.enemy = None
+        elif self.square_type is not SquareType.TOWER_SQUARE:
+            self.enemies.remove(unit)
         
-        return removed_unit
 

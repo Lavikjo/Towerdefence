@@ -13,10 +13,10 @@ class Enemy(Unit):
 	def __init__(self, enemy_type):
 		
 		super().__init__(enemy_type)
-		self.speed = 0
+		self.speed = 1
 		self.prize = 0
 		self.alive = True
-		self.hp = 0
+		self.hp = 2
 		self.route_number = 0
 
 	def is_alive(self):
@@ -31,14 +31,14 @@ class Enemy(Unit):
 		current_square = self.get_current_square()
 
 		if self.route_number == len(route) - 1:
-			current_square.remove_unit()
+			current_square.remove_unit(self)
 			self.alive = False
 			self.get_world().damage_base(1)
 			return
 
 		target_square = self.get_world().get_square(route[self.route_number+1])
 
-		current_square.remove_unit()
+		current_square.remove_unit(self)
 		self.set_pos(route[self.route_number+1])
 		target_square.set_enemy(self)
 
@@ -48,10 +48,11 @@ class Enemy(Unit):
 
 		if self.hp > 0:
 			'''
-			Check if the damage kills the player and return True
+			Check if the damage kills the enemy and return True
 			'''
 			if (self.hp - amount) <= 0:
 				self.hp = 0
+				self.alive = False
 				return True
 			else:
 				self.hp -= amount

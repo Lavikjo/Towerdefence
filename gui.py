@@ -64,7 +64,7 @@ class GUI(QtWidgets.QMainWindow):
 
 		self.logic_timer = QtCore.QTimer()
 		self.logic_timer.timeout.connect(self.update_logic)
-		self.logic_timer.start(200)
+		self.logic_timer.start(1000)
 
 		self.graphic_timer = QtCore.QTimer()
 		self.graphic_timer.timeout.connect(self.update_graphics)
@@ -90,7 +90,7 @@ class GUI(QtWidgets.QMainWindow):
 				self.scene.addItem(grid)
 
 	def add_tower_graphics_items(self):
-		missing_towers = self.world.get_towers()
+		missing_towers = self.world.get_towers()[:]
 		for item in self.tower_graphics_items:
 			if item.tower in missing_towers:
 				missing_towers.remove(item.tower)
@@ -100,7 +100,7 @@ class GUI(QtWidgets.QMainWindow):
 			self.scene.addItem(tower_graphic)
 
 	def add_enemy_graphics_items(self):
-		missing_enemies = self.world.get_enemies()
+		missing_enemies = self.world.get_enemies()[:]
 		for item in self.enemy_graphics_items:
 			if item.enemy in missing_enemies:
 				missing_enemies.remove(item.enemy)
@@ -136,7 +136,12 @@ class GUI(QtWidgets.QMainWindow):
 		self.money_label.setText("Money: {}".format(self.world.money))
 
 	def update_logic(self):
+		self.update_towers()
 		self.update_enemies()
+
+	def update_towers(self):
+		for tower in self.world.get_towers():
+			tower.attack(self.world.get_route())
 
 	def update_enemies(self):
 		self.world.remove_dead_enemies()
