@@ -7,7 +7,7 @@ class MapReader():
 	def parse_waves(root):
 		waves = []
 		for wave in root.find('waves'):
-			waves.append(wave.attrib)
+			waves.append({key: int(value) for (key, value) in wave.attrib.items()})
 		return waves
 
 	def parse_route(world, map_data):
@@ -53,7 +53,6 @@ class MapReader():
 		route = MapReader.parse_route(world, map_data)
 		world.set_route(route)
 		waves = MapReader.parse_waves(root)
-		print(waves)
 		world.set_waves(waves)
 
 		return world

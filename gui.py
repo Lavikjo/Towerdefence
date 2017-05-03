@@ -14,7 +14,6 @@ class QScene(QtWidgets.QGraphicsScene):
 			pos = ev.scenePos()
 			unit = self.gui.selected_unit
 			coord = (int(pos.x() / self.gui.square_size), int(pos.y() / self.gui.square_size))
-			print(coord)
 			try:
 				square = self.gui.world.squares[coord[0]][coord[1]]
 				tower = square.get_tower()
@@ -45,7 +44,6 @@ class GUI(QtWidgets.QMainWindow):
 		self.centralWidget().setLayout(self.horizontal)
 
 		self.button_layout = QtWidgets.QVBoxLayout()
-		#self.button_layout.setColumnStretch(1, 20)
 
 		self.side_widget.setLayout(self.button_layout)
 		self.game_widget.setLayout(self.game_layout)
@@ -62,9 +60,10 @@ class GUI(QtWidgets.QMainWindow):
 		self.add_tower_graphics_items()
 		self.add_enemy_graphics_items()
 
+		self.dt = 300
 		self.logic_timer = QtCore.QTimer()
 		self.logic_timer.timeout.connect(self.update_logic)
-		self.logic_timer.start(1000)
+		self.logic_timer.start(self.dt)
 
 		self.graphic_timer = QtCore.QTimer()
 		self.graphic_timer.timeout.connect(self.update_graphics)
@@ -121,6 +120,7 @@ class GUI(QtWidgets.QMainWindow):
 
 	def update_graphics(self):
 		self.add_tower_graphics_items()
+		self.add_enemy_graphics_items()
 		self.remove_dead_graphics()
 		
 
@@ -136,8 +136,16 @@ class GUI(QtWidgets.QMainWindow):
 		self.money_label.setText("Money: {}".format(self.world.money))
 
 	def update_logic(self):
-		self.update_towers()
 		self.update_enemies()
+		self.update_spawner()
+		self.update_towers()
+		
+
+	def update_spawner(self):
+		if self.world.wave_spawner is not None:
+			self.world.wave_spawner.update(self.dt)
+		else:
+			self.world.wave_spawner = None
 
 	def update_towers(self):
 		for tower in self.world.get_towers():
@@ -159,6 +167,10 @@ class GUI(QtWidgets.QMainWindow):
 		self.selection_label.setText("Selected: {}".format(tower_type).split(".")[-1])
 
 	def init_buttons(self):
+
+		self.wave_btn = QtWidgets.QPushButton("Next Wave")
+		self.button_layout.addWidget(self.wave_btn)
+		self.wave_btn.clicked.connect(self.world.next_wave)
 
 		self.tower_btn = QtWidgets.QPushButton("Electric")
 		self.button_layout.addWidget(self.tower_btn)

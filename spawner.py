@@ -1,5 +1,6 @@
 from threading import Timer
 from random import Random, choice
+from enemy import Enemy, EnemyType
 
 class Spawner():
 
@@ -8,9 +9,9 @@ class Spawner():
 		self.world = world
 		self.wave = wave
 		self.complete = False
-		self.random = random.Random(seed)
-		self.spawntimer = Timer(spawn_delay, self.spawn_enemy())
-		self.spawntimer.start()
+		self.random = Random(seed)
+		self.spawn_delay = spawn_delay
+		self.spawn_cooldown = 0
 
 	def next_enemy(self):
 		'''
@@ -18,9 +19,9 @@ class Spawner():
 		'''
 		# generate wave dictionary with only positive amounts
 		wave = {key: value for (key, value) in self.wave.items() if value}
-
-		if wave:
-			enemy_type, amount = self.random.choice(list(self.wave.keys()))
+		if bool(wave):
+			enemy_type = self.random.choice(list(wave.keys()))
+			return enemy_type
 		else:
 			# no more enemies left so wave is complete
 			self.complete = True
@@ -28,15 +29,25 @@ class Spawner():
 	def spawn_enemy(self):
 		'''
 		Spawns next random enemy to start square and starts spawntimer until wave is complete
-		'''
+		'''	
 		enemy_type = self.next_enemy()
-
 		if not self.complete:
 			self.wave[enemy_type] -= 1
-			enemy = Enemy(enemy_type)
+			enemy = Enemy(EnemyType[enemy_type])
 			self.world.add_enemy(enemy, self.world.get_start_square())
-			self.spawntimer.start()
-	
+				
+		
+			
+	def update(self, dt):
+
+		# no cooldown, spawn enemy
+		if self.spawn_cooldown <= 0:
+			self.spawn_enemy()
+			self.spawn_cooldown += self.spawn_delay
+		# cooldown not expired, decrease it by logic timestep
+		elif self.spawn_cooldown > 0:
+			self.spawn_cooldown -= dt/1000
+
 	def __str__(self):
 		'''
 		Prints types and amounts of enemies left on current wave
