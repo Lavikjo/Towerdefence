@@ -39,11 +39,11 @@ class QScene(QtWidgets.QGraphicsScene):
 
 					self.gui.selected_unit = None
 					next_atk_speed = self.gui.next_upgrade('UPGRADE_SPEED')
-					self.gui.attack_speed_upgrade_btn.setText("Attack Speed: {:0.1f}+({:0.1f})".format(self.gui.selected_tower.attack_speed, next_atk_speed))
+					self.gui.attack_speed_upgrade_btn.setText("Attack Speed: {:0.1f}+({:0.1f}) {}$".format(self.gui.selected_tower.attack_speed, next_atk_speed[0], next_atk_speed[1]))
 					next_range = self.gui.next_upgrade('UPGRADE_RANGE')
-					self.gui.range_upgrade_btn.setText("Range: {:d}+({:d})".format(int(self.gui.selected_tower.range), int(next_range)))
+					self.gui.range_upgrade_btn.setText("Range: {:d}+({:d}) {}$".format(int(self.gui.selected_tower.range), int(next_range[0]), next_range[1]))
 					next_dmg = self.gui.next_upgrade('UPGRADE_DMG')
-					self.gui.damage_upgrade_btn.setText("Damage: {:d}+({:d})".format(int(self.gui.selected_tower.damage), int(next_dmg)))
+					self.gui.damage_upgrade_btn.setText("Damage: {:d}+({:d}) {}$".format(int(self.gui.selected_tower.damage), int(next_dmg[0]), next_dmg[1]))
 				
 				elif unit:
 					self.gui.selected_label.setText("Nothing selected")
@@ -73,7 +73,7 @@ class QScene(QtWidgets.QGraphicsScene):
 					self.gui.damage_upgrade_btn.setEnabled(False)
 					self.gui.range_upgrade_btn.setEnabled(False)
 					self.gui.selected_tower = None
-					
+
 					if self.connected:
 						self.gui.attack_speed_upgrade_btn.clicked.disconnect()
 						self.gui.range_upgrade_btn.clicked.disconnect()
@@ -205,7 +205,8 @@ class GUI(QtWidgets.QMainWindow):
 	def next_upgrade(self, upgrade_type):
 		upgrade_level = self.selected_tower.upgrade_levels[upgrade_type]
 		next_upgrade_value = self.selected_tower.attack_speed+self.selected_tower.upgrades[(upgrade_type, upgrade_level)][0]
-		return next_upgrade_value
+		next_upgrade_cost = self.selected_tower.upgrades[(upgrade_type, upgrade_level)][1]
+		return next_upgrade_value, next_upgrade_cost
 
 	def update_labels(self):
 		self.money_label.setText("Money: {}".format(self.world.money))
@@ -215,11 +216,11 @@ class GUI(QtWidgets.QMainWindow):
 		if self.attack_speed_upgrade_btn.clicked or self.range_upgrade_btn.clicked or self.damage_upgrade_btn.clicked:
 			if self.selected_tower:
 				next_atk_speed = self.next_upgrade('UPGRADE_SPEED')
-				self.attack_speed_upgrade_btn.setText("Attack Speed: {:0.1f}+({:0.1f})".format(self.selected_tower.attack_speed, next_atk_speed))
+				self.attack_speed_upgrade_btn.setText("Attack Speed: {:0.1f}+({:0.1f}) {}$".format(self.selected_tower.attack_speed, next_atk_speed[0], next_atk_speed[1]))
 				next_range = self.next_upgrade('UPGRADE_RANGE')
-				self.range_upgrade_btn.setText("Range: {:d}+({:d})".format(int(self.selected_tower.range), int(next_range)))
+				self.range_upgrade_btn.setText("Range: {:d}+({:d}) {}$".format(int(self.selected_tower.range), int(next_range[0]), next_range[1]))
 				next_dmg = self.next_upgrade('UPGRADE_DMG')
-				self.damage_upgrade_btn.setText("Damage: {:d}+({:d})".format(int(self.selected_tower.damage), int(next_dmg)))
+				self.damage_upgrade_btn.setText("Damage: {:d}+({:d}) {}$".format(int(self.selected_tower.damage), int(next_dmg[0]), next_dmg[1]))
 		
 
 	def update_logic(self):
