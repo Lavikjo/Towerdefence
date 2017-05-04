@@ -196,6 +196,7 @@ class GUI(QtWidgets.QMainWindow):
 
 	def update_labels(self):
 		self.money_label.setText("Money: {}".format(self.world.money))
+		self.health_label.setText("HP: {}".format(self.world.base_hp))
 		
 		# upgrade labels in upgrade buttons if state change was detected
 		if self.attack_speed_upgrade_btn.clicked or self.range_upgrade_btn.clicked or self.damage_upgrade_btn.clicked:
@@ -213,6 +214,7 @@ class GUI(QtWidgets.QMainWindow):
 		self.update_spawner()
 		self.update_towers()
 		self.check_status()
+		print(self.world)
 		
 		
 
@@ -317,12 +319,13 @@ class GUI(QtWidgets.QMainWindow):
 		self.game_layout.addWidget(self.view)
 		self.game_layout.addStretch()
 
+		self.health_label = QtWidgets.QLabel()
 		self.money_label = QtWidgets.QLabel()
 		
 		self.selected_label = QtWidgets.QLabel("Selected Tower")
 		self.selection_label = QtWidgets.QLabel()
 
-
+		self.info_layout.addWidget(self.health_label)
 		self.info_layout.addWidget(self.money_label)
 		self.info_layout.addSpacerItem(QtWidgets.QSpacerItem(200, 200))
 		self.info_layout.addWidget(self.selected_label)
