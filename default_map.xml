@@ -411,6 +411,15 @@
 		<wave LIGHT_ENEMY="5" HEAVY_ENEMY="1">0</wave>
 		<wave LIGHT_ENEMY="6" HEAVY_ENEMY="2">1</wave>
 		<wave LIGHT_ENEMY="7" HEAVY_ENEMY="4">2</wave>
+		<wave LIGHT_ENEMY="5" HEAVY_ENEMY="2" FAST_ENEMY="2">3</wave>
+		<wave LIGHT_ENEMY="7" HEAVY_ENEMY="4" FAST_ENEMY="3">4</wave>
+		<wave LIGHT_ENEMY="4" HEAVY_ENEMY="5" FAST_ENEMY="4">5</wave>
+		<wave LIGHT_ENEMY="10" HEAVY_ENEMY="0" FAST_ENEMY="8">6</wave>
+		<wave LIGHT_ENEMY="0" HEAVY_ENEMY="10" FAST_ENEMY="1">7</wave>
+		<wave LIGHT_ENEMY="30" HEAVY_ENEMY="0" FAST_ENEMY="0">8</wave>
+		<wave LIGHT_ENEMY="12" HEAVY_ENEMY="3" FAST_ENEMY="8">9</wave>
+		<wave LIGHT_ENEMY="13" HEAVY_ENEMY="5" FAST_ENEMY="9">10</wave>
+		<wave LIGHT_ENEMY="30" HEAVY_ENEMY="10" FAST_ENEMY="15">11</wave>
 	</waves>
 
 </map_data>

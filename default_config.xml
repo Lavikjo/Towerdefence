@@ -12,9 +12,9 @@
 			<Projectile_Graphic_Offset_X>5</Projectile_Graphic_Offset_X>
 			<Projectile_Graphic_Offset_Y>0</Projectile_Graphic_Offset_Y>
 			<Upgrades>
-				<UPGRADE_DMG level = "1">15, 30</UPGRADE_DMG>
+				<UPGRADE_DMG level = "1">3, 30</UPGRADE_DMG>
 				<UPGRADE_SPEED level = "1">0.1, 40</UPGRADE_SPEED>
-				<UPGRADE_RANGE level = "1">1, 100</UPGRADE_RANGE>
+				<UPGRADE_RANGE level = "1">1, 200</UPGRADE_RANGE>
 			</Upgrades>
 		</ELECTRIC_TOWER>
 
@@ -29,9 +29,9 @@
 			<Projectile_Graphic_Offset_X>6</Projectile_Graphic_Offset_X>
 			<Projectile_Graphic_Offset_Y>0</Projectile_Graphic_Offset_Y>
 			<Upgrades>
-				<UPGRADE_DMG level = "1">15,30</UPGRADE_DMG>
+				<UPGRADE_DMG level = "1">4,40</UPGRADE_DMG>
 				<UPGRADE_SPEED level = "1">0.1,40</UPGRADE_SPEED>
-				<UPGRADE_RANGE level = "1">1,100</UPGRADE_RANGE>
+				<UPGRADE_RANGE level = "1">1,200</UPGRADE_RANGE>
 			</Upgrades>
 		</LASER_TOWER>
 	</TowerData>
