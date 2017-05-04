@@ -19,9 +19,20 @@ class QScene(QtWidgets.QGraphicsScene):
 				square = self.gui.world.squares[coord[0]][coord[1]]
 				tower = square.get_tower()
 				if tower:
+					self.gui.selected_label.setText("Selected tower")
 					self.gui.selection_label.setText("{}: {}".format(str(tower.type).split(".")[-1] ,coord))
+					self.gui.selected_tower = tower
+
+					self.gui.attack_speed_upgrade_btn.setEnabled(True)
+					self.gui.damage_upgrade_btn.setEnabled(True)
+					self.gui.range_upgrade_btn.setEnabled(True)
+
+					self.gui.attack_speed_upgrade_btn.clicked.connect(partial(self.gui.selected_tower.upgrade, 'UPGRADE_SPEED'))
+					self.gui.range_upgrade_btn.clicked.connect(partial(self.gui.selected_tower.upgrade, 'UPGRADE_RANGE'))
+					self.gui.damage_upgrade_btn.clicked.connect(partial(self.gui.selected_tower.upgrade, 'UPGRADE_DMG'))
 					self.gui.selected_unit = None
 				if unit:
+					self.gui.selected_label.setText("Nothing selected")
 					self.gui.selection_label.setText("")
 					self.gui.selected_unit = None
 					self.gui.world.add_tower(unit, coord)
@@ -35,18 +46,18 @@ class GUI(QtWidgets.QMainWindow):
 		super().__init__()
 		self.main_widget = QtWidgets.QWidget()
 		self.setCentralWidget(self.main_widget)
-		self.horizontal = QtWidgets.QHBoxLayout()
+		self.main_layout = QtWidgets.QHBoxLayout()
 		self.game_widget = QtWidgets.QWidget()
 		self.side_widget = QtWidgets.QWidget()
 		self.game_layout = QtWidgets.QHBoxLayout()
 
-		self.horizontal.addWidget(self.game_widget)
-		self.horizontal.addWidget(self.side_widget)
-		self.centralWidget().setLayout(self.horizontal)
+		self.main_layout.addWidget(self.game_widget)
+		self.main_layout.addWidget(self.side_widget)
+		self.centralWidget().setLayout(self.main_layout)
 
-		self.button_layout = QtWidgets.QVBoxLayout()
+		self.info_layout = QtWidgets.QVBoxLayout()
 
-		self.side_widget.setLayout(self.button_layout)
+		self.side_widget.setLayout(self.info_layout)
 		self.game_widget.setLayout(self.game_layout)
 
 		self.world = world
@@ -55,9 +66,10 @@ class GUI(QtWidgets.QMainWindow):
 		self.enemy_graphics_items = []
 		self.projectiles = []
 		self.selected_unit = None
+		self.selected_tower = None
 
 		self.init_window()
-		self.init_buttons()
+		self.init_info_layout()
 		self.add_map_grid_items()
 		self.add_tower_graphics_items()
 		self.add_enemy_graphics_items()
@@ -180,26 +192,45 @@ class GUI(QtWidgets.QMainWindow):
 		'''
 		Sets spesific tower type as active unit
 		'''
-
+		self.selected_label.setText("Placing tower")
 		self.selected_unit = Tower(tower_type, self.world.configs['TowerData'])
 		self.selection_label.setText("Selected: {}".format(tower_type).split(".")[-1])
 
-	def init_buttons(self):
+	def init_info_layout(self):
+
+		self.upgrade_label = QtWidgets.QLabel("Upgrades")
+		self.info_layout.addWidget(self.upgrade_label)
+		self.attack_speed_upgrade_btn = QtWidgets.QPushButton("Speed")
+		self.range_upgrade_btn = QtWidgets.QPushButton("Range")
+		self.damage_upgrade_btn = QtWidgets.QPushButton("Damage")
+
+		self.attack_speed_upgrade_btn.setEnabled(False)
+		self.range_upgrade_btn.setEnabled(False)
+		self.damage_upgrade_btn.setEnabled(False)
+
+		self.info_layout.addWidget(self.attack_speed_upgrade_btn)
+		self.info_layout.addWidget(self.range_upgrade_btn)
+		self.info_layout.addWidget(self.damage_upgrade_btn)
+		self.info_layout.addSpacerItem(QtWidgets.QSpacerItem(20, 20))
 
 		self.wave_btn = QtWidgets.QPushButton("Next Wave")
-		self.button_layout.addWidget(self.wave_btn)
+		self.info_layout.addWidget(self.wave_btn)
 		self.wave_btn.clicked.connect(self.world.next_wave)
+		self.info_layout.addSpacerItem(QtWidgets.QSpacerItem(20, 20))
 
+		self.tower_label = QtWidgets.QLabel("Towers")
+		self.info_layout.addWidget(self.tower_label)
+		#self.info_layout.setAlignment(self.tower_label, QtCore.Qt.AlignHCenter)
 		self.tower_btn = QtWidgets.QPushButton("Electric")
-		self.button_layout.addWidget(self.tower_btn)
+		self.info_layout.addWidget(self.tower_btn)
 		self.tower_btn.clicked.connect(partial(self.place_tower, TowerType.BASIC_TOWER))
 		self.tower_btn2 = QtWidgets.QPushButton("Laser")
 		self.tower_btn2.clicked.connect(partial(self.place_tower, TowerType.STRONG_TOWER))
-		self.button_layout.addWidget(self.tower_btn2)
+		self.info_layout.addWidget(self.tower_btn2)
 
 	def init_window(self):
 
-		self.setGeometry(900, 900, 900, 640)
+		self.setGeometry(1024, 720, 1024, 720)
 		self.setWindowTitle('Yet Another Tower Defense')
 		self.show()
 
@@ -209,12 +240,19 @@ class GUI(QtWidgets.QMainWindow):
 		self.view = QtWidgets.QGraphicsView(self.scene, self)
 		self.view.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 		self.view.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-		self.view.adjustSize()
 		self.view.show()
 
 		self.game_layout.addWidget(self.view)
+		self.game_layout.addStretch()
 
 		self.money_label = QtWidgets.QLabel()
+		
+		self.selected_label = QtWidgets.QLabel("Selected Tower")
 		self.selection_label = QtWidgets.QLabel()
-		self.button_layout.addWidget(self.money_label)
-		self.button_layout.addWidget(self.selection_label)
+
+
+		self.info_layout.addWidget(self.money_label)
+		self.info_layout.addSpacerItem(QtWidgets.QSpacerItem(200, 200))
+		self.info_layout.addWidget(self.selected_label)
+		self.info_layout.addWidget(self.selection_label)
+		self.info_layout.addStrut(300)

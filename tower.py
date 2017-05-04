@@ -10,8 +10,7 @@ class TowerType(Enum):
 
 class Tower(Unit):
 
-	#self.upgrade_levels = {UPGRADE_DMG: 1, UPGRADE_RANGE: 1, UPGRADE_SPEED: 1}
-	#self.upgrades = {(UPGRADE_DMG, 1): 15}
+	
 
 	
 	def __init__(self, tower_type, configs):
@@ -22,6 +21,9 @@ class Tower(Unit):
 		self.range = int(self.configs[tower_type.name]['Range']) # range in squares to all cardinal directions
 		self.attack_speed = float(self.configs[tower_type.name]['Attack_Speed']) # number of attack per second
 		self.cost = int(self.configs[tower_type.name]['Cost'])
+		self.upgrade_levels = {'UPGRADE_DMG': 1, 'UPGRADE_RANGE': 1, 'UPGRADE_SPEED': 1}
+		self.upgrades = {('UPGRADE_DMG', 1): 15}
+
 		self.target = None
 
 		self.attack_cooldown = 0
@@ -101,9 +103,9 @@ class Tower(Unit):
 	def upgrade(self, upgrade_type):
 		upgrade_level = self.upgrade_levels[upgrade_type]
 
-		if(upgrade_type == UPGRADE_DMG):
+		if(upgrade_type == 'UPGRADE_DMG'):
 			self.damage += self.upgrades[(upgrade_type, upgrade_level)]
-		elif(upgrade_type == UPGRADE_RANGE):
+		elif(upgrade_type == 'UPGRADE_RANGE'):
 			self.range += self.upgrades[(upgrade_type, upgrade_level)]
-		elif(upgrade_type == UPGRADE_SPEED):
+		elif(upgrade_type == 'UPGRADE_SPEED'):
 			self.attack_speed += self.upgrades[(upgrade_type, upgrade_level)]
