@@ -21,6 +21,7 @@ class QScene(QtWidgets.QGraphicsScene):
 				square = self.gui.world.squares[coord[0]][coord[1]]
 				tower = square.get_tower()
 				if tower:
+
 					self.gui.selected_label.setText("Selected tower")
 					self.gui.selection_label.setText("{}: {}".format(str(tower.type).split(".")[-1] ,coord))
 					self.gui.selected_tower = tower
@@ -37,7 +38,6 @@ class QScene(QtWidgets.QGraphicsScene):
 						self.connected = True
 
 					self.gui.selected_unit = None
-
 					next_atk_speed = self.gui.next_upgrade('UPGRADE_SPEED')
 					self.gui.attack_speed_upgrade_btn.setText("Attack Speed: {:0.1f}+({:0.1f})".format(self.gui.selected_tower.attack_speed, next_atk_speed))
 					next_range = self.gui.next_upgrade('UPGRADE_RANGE')
@@ -58,6 +58,12 @@ class QScene(QtWidgets.QGraphicsScene):
 					self.gui.attack_speed_upgrade_btn.setEnabled(False)
 					self.gui.damage_upgrade_btn.setEnabled(False)
 					self.gui.range_upgrade_btn.setEnabled(False)
+
+					if self.connected:
+						self.gui.attack_speed_upgrade_btn.clicked.disconnect()
+						self.gui.range_upgrade_btn.clicked.disconnect()
+						self.gui.damage_upgrade_btn.clicked.disconnect()
+						self.connected = False
 					
 				else:
 					self.gui.attack_speed_upgrade_btn.setText("Attack Speed")
@@ -67,6 +73,13 @@ class QScene(QtWidgets.QGraphicsScene):
 					self.gui.damage_upgrade_btn.setEnabled(False)
 					self.gui.range_upgrade_btn.setEnabled(False)
 					self.gui.selected_tower = None
+					
+					if self.connected:
+						self.gui.attack_speed_upgrade_btn.clicked.disconnect()
+						self.gui.range_upgrade_btn.clicked.disconnect()
+						self.gui.damage_upgrade_btn.clicked.disconnect()
+						self.connected = False
+					
 					
 			except IndexError:
 				print("Click out of screen!")
@@ -214,7 +227,6 @@ class GUI(QtWidgets.QMainWindow):
 		self.update_spawner()
 		self.update_towers()
 		self.check_status()
-		print(self.world)
 		
 		
 
@@ -267,6 +279,7 @@ class GUI(QtWidgets.QMainWindow):
 		self.damage_upgrade_btn.setEnabled(False)
 		self.range_upgrade_btn.setEnabled(False)
 		self.selected_tower = None
+
 
 		
 
