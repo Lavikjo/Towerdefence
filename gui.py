@@ -1,6 +1,7 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 from tower_graphics_item import TowerGraphicsItem
 from enemy_graphics_item import EnemyGraphicsItem
+from projectile import Projectile
 from tower import TowerType, Tower
 from functools import partial
 
@@ -52,6 +53,7 @@ class GUI(QtWidgets.QMainWindow):
 		self.square_size = square_size
 		self.tower_graphics_items = []
 		self.enemy_graphics_items = []
+		self.projectiles = []
 		self.selected_unit = None
 
 		self.init_window()
@@ -108,11 +110,21 @@ class GUI(QtWidgets.QMainWindow):
 			self.enemy_graphics_items.append(enemy_graphic)
 			self.scene.addItem(enemy_graphic)
 
+	def create_projectile(self, enemy, tower):
+
+		projectile = Projectile(enemy, tower, self.square_size)
+		self.projectiles.append(projectile)
+		self.scene.addItem(projectile)
+
 	def remove_dead_graphics(self):
 		for enemy_graphic in self.enemy_graphics_items:
 			if not enemy_graphic.enemy.is_alive():
 				self.scene.removeItem(enemy_graphic)
 				self.enemy_graphics_items.remove(enemy_graphic)
+		for projectile in self.projectiles:
+			if not projectile.is_alive():
+				self.scene.removeItem(projectile)
+				self.projectiles.remove(projectile)
 
 	def update_all(self):
 		self.update_logic()
@@ -128,6 +140,8 @@ class GUI(QtWidgets.QMainWindow):
 			enemy_graphic.update()
 		for tower_graphic in self.tower_graphics_items:
 			tower_graphic.update()
+		for projectile in self.projectiles:
+			projectile.update(self.dt)
 
 		self.update_labels()
 
@@ -149,7 +163,11 @@ class GUI(QtWidgets.QMainWindow):
 
 	def update_towers(self):
 		for tower in self.world.get_towers():
-			tower.update(self.dt)
+			# if it returns enemy, tower has attacked, create projectile
+			attacked = tower.update(self.dt)
+			if attacked:
+				self.create_projectile(tower.target, tower)
+				tower.target = None
 
 	def update_enemies(self):
 		self.world.remove_dead_enemies()

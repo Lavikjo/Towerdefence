@@ -22,6 +22,7 @@ class Tower(Unit):
 		self.range = int(self.configs[tower_type.name]['Range']) # range in squares to all cardinal directions
 		self.attack_speed = float(self.configs[tower_type.name]['Attack_Speed']) # number of attack per second
 		self.cost = int(self.configs[tower_type.name]['Cost'])
+		self.target = None
 
 		self.attack_cooldown = 0
 		
@@ -75,9 +76,11 @@ class Tower(Unit):
 		if self.attack_cooldown <= 0:
 			if self.attack():
 				self.attack_cooldown += 1/self.attack_speed
+				return True
 		# cooldown not expired, decrease it by logic timestep
 		elif self.attack_cooldown > 0:
 			self.attack_cooldown -= dt/1000
+			return False
 	def attack(self):
 		'''
 		Checks if tower can attack and deals damage to random enemy
@@ -89,6 +92,7 @@ class Tower(Unit):
 			random = Random(300)
 			chosen_enemy = random.choice(found_enemies)
 			chosen_enemy.damage(self.damage)
+			self.target = chosen_enemy
 			return True
 		else:
 			return False

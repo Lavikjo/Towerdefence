@@ -8,15 +8,21 @@
 			<Cost>20</Cost>
 			<Graphic_Offset_X>0</Graphic_Offset_X>
 			<Graphic_Offset_Y>0</Graphic_Offset_Y>
+			<ProjectileType>ELECTRIC</ProjectileType>
+			<Projectile_Graphic_Offset_X>5</Projectile_Graphic_Offset_X>
+			<Projectile_Graphic_Offset_Y>0</Projectile_Graphic_Offset_Y>
 		</BASIC_TOWER>
 
 		<STRONG_TOWER>
 			<Damage>5</Damage>
-			<Attack_Speed>2</Attack_Speed>
-			<Range>3</Range>
+			<Attack_Speed>0.4</Attack_Speed>
+			<Range>2</Range>
 			<Cost>50</Cost>
 			<Graphic_Offset_X>1</Graphic_Offset_X>
 			<Graphic_Offset_Y>0</Graphic_Offset_Y>
+			<ProjectileType>LASER</ProjectileType>
+			<Projectile_Graphic_Offset_X>6</Projectile_Graphic_Offset_X>
+			<Projectile_Graphic_Offset_Y>0</Projectile_Graphic_Offset_Y>
 		</STRONG_TOWER>
 	</TowerData>
 
