@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Configs>
 	<TowerData>
-		<BASIC_TOWER>
+		<ELECTRIC_TOWER>
 			<Damage>2</Damage>
 			<Attack_Speed>0.7</Attack_Speed>
 			<Range>3</Range>
@@ -11,9 +11,14 @@
 			<ProjectileType>ELECTRIC</ProjectileType>
 			<Projectile_Graphic_Offset_X>5</Projectile_Graphic_Offset_X>
 			<Projectile_Graphic_Offset_Y>0</Projectile_Graphic_Offset_Y>
-		</BASIC_TOWER>
+			<Upgrades>
+				<UPGRADE_DMG level = "1">15, 30</UPGRADE_DMG>
+				<UPGRADE_SPEED level = "1">0.1, 40</UPGRADE_SPEED>
+				<UPGRADE_RANGE level = "1">1, 100</UPGRADE_RANGE>
+			</Upgrades>
+		</ELECTRIC_TOWER>
 
-		<STRONG_TOWER>
+		<LASER_TOWER>
 			<Damage>5</Damage>
 			<Attack_Speed>0.4</Attack_Speed>
 			<Range>2</Range>
@@ -23,7 +28,12 @@
 			<ProjectileType>LASER</ProjectileType>
 			<Projectile_Graphic_Offset_X>6</Projectile_Graphic_Offset_X>
 			<Projectile_Graphic_Offset_Y>0</Projectile_Graphic_Offset_Y>
-		</STRONG_TOWER>
+			<Upgrades>
+				<UPGRADE_DMG level = "1">15,30</UPGRADE_DMG>
+				<UPGRADE_SPEED level = "1">0.1,40</UPGRADE_SPEED>
+				<UPGRADE_RANGE level = "1">1,100</UPGRADE_RANGE>
+			</Upgrades>
+		</LASER_TOWER>
 	</TowerData>
 
 	<EnemyData>

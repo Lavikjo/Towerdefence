@@ -1,5 +1,11 @@
 import xml.etree.ElementTree as ET
 
+def convert(value):
+	try:
+		return int(value)
+	except ValueError:
+		return float(value)
+
 class ConfigReader:
 
 	def parse_enemies(root):
@@ -13,10 +19,14 @@ class ConfigReader:
 			settings = {}
 		return enemies
 
-	def parse_upgrades(upgrades):
+	def parse_upgrades(upgrade_setting):
 		upgrades = {}
 		settings = {}
 
+		for upgrade in upgrade_setting:
+			converted_tuple = tuple([convert(x) for x in upgrade.text.split(',')])
+			settings.update({(upgrade.tag, int(upgrade.attrib['level'])): converted_tuple})
+		return settings
 
 	def parse_towers(root):
 		towers = {}
@@ -24,10 +34,14 @@ class ConfigReader:
 
 		for tower in root.find('TowerData'):
 			for setting in tower:
-				settings.update({setting.tag: setting.text})
+				if setting.tag == 'Upgrades':
+					settings.update({setting.tag: ConfigReader.parse_upgrades(setting)})
+				else:
+					settings.update({setting.tag: setting.text})
 				#Add parsing for updates later on here
 			towers[tower.tag] = settings
 			settings = {}
+		#print(towers)
 		return towers
 
 	def parse_config(filename):

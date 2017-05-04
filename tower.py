@@ -1,12 +1,11 @@
 from unit import Unit
 from enum import Enum
 from random import Random, choice
-from collections import deque
 from square import SquareType
 
 class TowerType(Enum):
-	BASIC_TOWER = 0
-	STRONG_TOWER = 1
+	ELECTRIC_TOWER = 0
+	LASER_TOWER = 1
 
 class Tower(Unit):
 
@@ -22,8 +21,8 @@ class Tower(Unit):
 		self.attack_speed = float(self.configs[tower_type.name]['Attack_Speed']) # number of attack per second
 		self.cost = int(self.configs[tower_type.name]['Cost'])
 		self.upgrade_levels = {'UPGRADE_DMG': 1, 'UPGRADE_RANGE': 1, 'UPGRADE_SPEED': 1}
-		self.upgrades = {('UPGRADE_DMG', 1): 15}
-
+		self.upgrades = self.configs[tower_type.name]['Upgrades']
+		
 		self.target = None
 
 		self.attack_cooldown = 0
@@ -98,14 +97,28 @@ class Tower(Unit):
 			return True
 		else:
 			return False
-				
+	def can_afford(self, cost):
+		if self.get_world().money - cost >= 0:
+			self.get_world().money -= cost
+			return True
+		else:
+			return False
+
 
 	def upgrade(self, upgrade_type):
 		upgrade_level = self.upgrade_levels[upgrade_type]
+		money = self.get_world().money
 
 		if(upgrade_type == 'UPGRADE_DMG'):
-			self.damage += self.upgrades[(upgrade_type, upgrade_level)]
+			cost = self.upgrades[(upgrade_type, upgrade_level)][1]
+			if self.can_afford(cost):
+				self.damage += self.upgrades[(upgrade_type, upgrade_level)][0]
+			
 		elif(upgrade_type == 'UPGRADE_RANGE'):
-			self.range += self.upgrades[(upgrade_type, upgrade_level)]
+			cost = self.upgrades[(upgrade_type, upgrade_level)][1]
+			if self.can_afford(cost):
+				self.range += self.upgrades[(upgrade_type, upgrade_level)][0]
 		elif(upgrade_type == 'UPGRADE_SPEED'):
-			self.attack_speed += self.upgrades[(upgrade_type, upgrade_level)]
+			cost = self.upgrades[(upgrade_type, upgrade_level)][1]
+			if self.can_afford(cost):
+				self.attack_speed += self.upgrades[(upgrade_type, upgrade_level)][0]
