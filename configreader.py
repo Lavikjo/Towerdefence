@@ -46,8 +46,11 @@ class ConfigReader:
 
 	def parse_config(filename):
 		configs = {}
-
-		root = ET.parse(filename).getroot()
-		configs["EnemyData"] = ConfigReader.parse_enemies(root)
-		configs["TowerData"] = ConfigReader.parse_towers(root)
+		try:
+			root = ET.parse(filename).getroot()
+			configs["EnemyData"] = ConfigReader.parse_enemies(root)
+			configs["TowerData"] = ConfigReader.parse_towers(root)
+		except ET.ParseError:
+			print("Corrupted config file!")
+			return False
 		return configs

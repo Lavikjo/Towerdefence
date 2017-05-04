@@ -35,26 +35,29 @@ class MapReader():
 		return route
 
 	def parse_map(filename):
-		root = ET.parse(filename).getroot()
+		try:
+			root = ET.parse(filename).getroot()
 
-		map_width = int(root[0].text)
-		map_height = int(root[1].text)
+			map_width = int(root[0].text)
+			map_height = int(root[1].text)
 
-		map_data = [None] * map_width
-		for x in range(map_width):
-			map_data[x] = [None] * map_height
+			map_data = [None] * map_width
+			for x in range(map_width):
+				map_data[x] = [None] * map_height
 
-		for square in root.find('map_grid'):
-			#print(square.attrib, square.text)
-			coords = square.attrib
-			map_data[int(coords['x'])][int(coords['y'])] = SquareType(int(square.text))
+			for square in root.find('map_grid'):
+				#print(square.attrib, square.text)
+				coords = square.attrib
+				map_data[int(coords['x'])][int(coords['y'])] = SquareType(int(square.text))
 
-		world = GameWorld(map_width, map_height, map_data)
-		route = MapReader.parse_route(world, map_data)
-		world.set_route(route)
-		waves = MapReader.parse_waves(root)
-		world.set_waves(waves)
-
+			world = GameWorld(map_width, map_height, map_data)
+			route = MapReader.parse_route(world, map_data)
+			world.set_route(route)
+			waves = MapReader.parse_waves(root)
+			world.set_waves(waves)
+		except ET.ParseError:
+			print("Corrupted map file!")
+			return False
 		return world
 
 	
