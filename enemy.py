@@ -45,7 +45,8 @@ class Enemy(Unit):
 		if self.route_number == len(route) - 1:
 			current_square.remove_unit(self)
 			self.alive = False
-			self.get_world().damage_base(1)
+			if self.get_world().damage_base(self.base_damage):
+				self.get_world().game_over()
 			return
 
 		target_square = self.get_world().get_square(route[self.route_number+1])

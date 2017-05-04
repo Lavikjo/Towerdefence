@@ -1,4 +1,5 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5.QtWidgets import QApplication
 from tower_graphics_item import TowerGraphicsItem
 from enemy_graphics_item import EnemyGraphicsItem
 from projectile import Projectile
@@ -211,6 +212,8 @@ class GUI(QtWidgets.QMainWindow):
 		self.update_enemies()
 		self.update_spawner()
 		self.update_towers()
+		self.check_status()
+		
 		
 
 	def update_spawner(self):
@@ -218,6 +221,19 @@ class GUI(QtWidgets.QMainWindow):
 			self.world.wave_spawner.update(self.dt)
 		else:
 			self.world.wave_spawner = None
+
+	def check_status(self):
+
+		if not self.world.alive:
+			game_over_message = QtWidgets.QMessageBox()
+			game_over_message.setIcon(QtWidgets.QMessageBox.Critical)
+			game_over_message.setWindowTitle("Game status")
+			game_over_message.setText("Game Over!")
+			game_over_message.setInformativeText("Press Ok to exit")
+			ret = game_over_message.exec()
+
+			if ret == QtWidgets.QMessageBox.Ok:
+				QApplication.instance().exit(1)
 
 	def update_towers(self):
 		for tower in self.world.get_towers():

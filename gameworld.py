@@ -29,6 +29,8 @@ class GameWorld():
 
 		self.configs = {}
 
+		self.alive = True
+
 	def add_tower(self, tower, pos):
 		if tower.set_world(self, pos) and self.squares[pos[0]][pos[1]].set_tower(tower):
 			if self.money >= tower.cost:
@@ -139,6 +141,9 @@ class GameWorld():
 
 	def add_config(self, configs):
 		self.configs = configs
+
+	def game_over(self):
+		self.alive = False
 
 	def __str__(self):
 		return_string = ""
