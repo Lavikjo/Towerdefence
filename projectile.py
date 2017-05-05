@@ -48,6 +48,7 @@ class Projectile(QtWidgets.QGraphicsPixmapItem):
 				painter.end()
 				graphic.setMask(graphic.createHeuristicMask())
 				self.setPixmap(graphic)
+				
 			except IndexError:
 				# Handles corner case with graphical item reaching the end before logic removes dead enemy
 				return
@@ -69,7 +70,6 @@ class Projectile(QtWidgets.QGraphicsPixmapItem):
 		return ((1 - t)*start[0] + t*end[0], (1 - t)*start[1] + t*end[1])
 
 	def update(self, dt):
-		
 		if self.alive_time <= 0:
 			self.alive = False
 		else:
@@ -85,8 +85,13 @@ class Projectile(QtWidgets.QGraphicsPixmapItem):
 				# calculate speed of projectile based on distance to enemy and alive time
 				# bullet will accelerate depending on the distance
 
+				# determine projectile speed only once
 				if not self.speed:
+
+					# speed = |distance_vector|/alive_time
 					self.speed = math.sqrt((enemy_real_pos[0] - tower_pos[0])**2 + (enemy_real_pos[1] - tower_pos[1])**2)/self.alive_time
+				
+				# interpolate projectile movement
 				try:
 					if self.move_threshold >= 1:
 						self.alive = False
@@ -98,6 +103,5 @@ class Projectile(QtWidgets.QGraphicsPixmapItem):
 				except IndexError:
 					# Handles corner case with graphical item reaching the end before logic removes dead enemy
 					return
-
 
 			self.alive_time -= dt/1000

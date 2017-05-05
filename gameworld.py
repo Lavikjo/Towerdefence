@@ -4,8 +4,7 @@ from spawner import Spawner
 class GameWorld():
 
 	def __init__(self, width, height, mapdata):
-		'''
-		'''
+
 		self.squares = [None] * width
 
 		for x in range(width):
@@ -32,6 +31,9 @@ class GameWorld():
 		self.alive = True
 
 	def add_tower(self, tower, pos):
+		'''
+		Adds tower to gameworld if there is enough money
+		'''
 		if (self.money - tower.cost) >= 0 and tower.set_world(self, pos) and self.squares[pos[0]][pos[1]].set_tower(tower):
 			self.money -= tower.cost
 			self.towers.append(tower)
@@ -40,6 +42,9 @@ class GameWorld():
 			return False
 
 	def add_enemy(self, enemy, pos):
+		'''
+		Adds enemy to gameworld
+		'''
 		if enemy.set_world(self, pos) and self.squares[pos[0]][pos[1]].set_enemy(enemy):
 			self.enemies.append(enemy)
 			return True
@@ -139,12 +144,18 @@ class GameWorld():
 						return self.start_square_pos
 
 	def add_config(self, configs):
+		'''
+		Add configuration dictionary
+		'''
 		self.configs = configs
 
 	def game_over(self):
 		self.alive = False
 
 	def __str__(self):
+		'''
+		Prints gameworld grid to console in readable format
+		'''
 		return_string = ""
 		for y in range(self.get_height()):
 			for x in range(self.get_width()):

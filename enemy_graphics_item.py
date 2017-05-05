@@ -13,6 +13,9 @@ class EnemyGraphicsItem(QtWidgets.QGraphicsPixmapItem):
 
 
 	def set_graphics(self):
+		'''
+		Crops and scales correct tile from tilemap and sets it as current graphic
+		'''
 		offset_x = int(self.enemy.configs[self.enemy.type.name]['Graphic_Offset_X'])
 		offset_y = int(self.enemy.configs[self.enemy.type.name]['Graphic_Offset_Y'])
 		original = QtGui.QPixmap("textures/tilemap.png")
@@ -28,6 +31,9 @@ class EnemyGraphicsItem(QtWidgets.QGraphicsPixmapItem):
 		return ((1 - t)*start[0] + t*end[0], (1 - t)*start[1] + t*end[1])
 
 	def update(self):
+		'''
+		Linearly interpolates enemy movement so it looks smooth
+		'''
 		world = self.enemy.get_world()
 		current_pos = self.enemy.get_pos()
 		try:

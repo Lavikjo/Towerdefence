@@ -63,6 +63,9 @@ class Square():
             return False
 
     def remove_unit(self, unit = None):
+        '''
+        Removes unit from square
+        '''
         if self.square_type is SquareType.TOWER_SQUARE and self.tower is not None:
             self.tower = None
         elif self.square_type is not SquareType.TOWER_SQUARE and unit in self.enemies:

@@ -22,7 +22,7 @@ class Tower(Unit):
 		self.cost = int(self.configs[tower_type.name]['Cost'])
 		self.upgrade_levels = {'UPGRADE_DMG': 1, 'UPGRADE_RANGE': 1, 'UPGRADE_SPEED': 1}
 		self.upgrades = self.configs[tower_type.name]['Upgrades']
-		
+
 		self.target = None
 
 		self.attack_cooldown = 0
@@ -78,6 +78,7 @@ class Tower(Unit):
 			if self.attack():
 				self.attack_cooldown += 1/self.attack_speed
 				return True
+
 		# cooldown not expired, decrease it by logic timestep
 		elif self.attack_cooldown > 0:
 			self.attack_cooldown -= dt/1000
@@ -106,6 +107,9 @@ class Tower(Unit):
 
 
 	def upgrade(self, upgrade_type):
+		'''
+		Upgrade tower with correct upgrade if there is enough money
+		'''
 		upgrade_level = self.upgrade_levels[upgrade_type]
 		money = self.get_world().money
 

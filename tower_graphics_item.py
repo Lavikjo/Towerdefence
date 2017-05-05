@@ -13,6 +13,9 @@ class TowerGraphicsItem(QtWidgets.QGraphicsPixmapItem):
 
 
 	def set_graphics(self):
+		'''
+		Crops and scales correct tile from tilemap and sets it as current graphic
+		'''
 		offset_x = int(self.tower.configs[self.tower.type.name]['Graphic_Offset_X'])
 		offset_y = int(self.tower.configs[self.tower.type.name]['Graphic_Offset_Y'])
 		original = QtGui.QPixmap("textures/tilemap.png")
@@ -20,7 +23,7 @@ class TowerGraphicsItem(QtWidgets.QGraphicsPixmapItem):
 		rect = QtCore.QRect(64*offset_x, 64*offset_y, 64, 64)
 		tile = QtGui.QPixmap()
 		tile = original.copy(rect).scaled(self.square_size, self.square_size)
-		
+
 		tile.setMask(tile.createHeuristicMask())
 		self.setPixmap(tile)
 	

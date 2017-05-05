@@ -42,9 +42,12 @@ class Enemy(Unit):
 		route = self.get_world().get_route()
 		current_square = self.get_current_square()
 
+		# check if end square has been reached
 		if self.route_number == len(route) - 1:
 			current_square.remove_unit(self)
 			self.alive = False
+
+			# sets game over if enemy kills player
 			if self.get_world().damage_base(self.base_damage):
 				self.get_world().game_over()
 			return
@@ -58,11 +61,11 @@ class Enemy(Unit):
 		self.route_number += 1
 
 	def damage(self, amount):
-
+		'''
+		Check if the damage kills the enemy and return True
+		'''
 		if self.hp > 0:
-			'''
-			Check if the damage kills the enemy and return True
-			'''
+			
 			if (self.hp - amount) <= 0:
 				self.hp = 0
 				self.world.money += self.prize

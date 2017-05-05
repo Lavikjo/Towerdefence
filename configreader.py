@@ -9,6 +9,9 @@ def convert(value):
 class ConfigReader:
 
 	def parse_enemies(root):
+		'''
+		Parse enemy related data from config file
+		'''
 		enemies = {}
 		settings = {}
 
@@ -20,6 +23,9 @@ class ConfigReader:
 		return enemies
 
 	def parse_upgrades(upgrade_setting):
+		'''
+		Parse upgrade related data from config file
+		'''
 		upgrades = {}
 		settings = {}
 
@@ -29,6 +35,9 @@ class ConfigReader:
 		return settings
 
 	def parse_towers(root):
+		'''
+		Parse tower related data from config file
+		'''
 		towers = {}
 		settings = {}
 

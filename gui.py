@@ -17,9 +17,12 @@ class QScene(QtWidgets.QGraphicsScene):
 			pos = ev.scenePos()
 			unit = self.gui.selected_unit
 			coord = (int(pos.x() / self.gui.square_size), int(pos.y() / self.gui.square_size))
+			
 			try:
 				square = self.gui.world.squares[coord[0]][coord[1]]
 				tower = square.get_tower()
+
+				# select tower
 				if tower:
 
 					self.gui.selected_label.setText("Selected tower")
@@ -45,6 +48,7 @@ class QScene(QtWidgets.QGraphicsScene):
 					next_dmg = self.gui.next_upgrade('UPGRADE_DMG')
 					self.gui.damage_upgrade_btn.setText("Damage: {:d}+({:d}) {}$".format(int(self.gui.selected_tower.damage), int(next_dmg[0]), next_dmg[1]))
 				
+				# place new tower
 				elif unit:
 					self.gui.selected_label.setText("Nothing selected")
 					self.gui.selection_label.setText("")
@@ -52,6 +56,7 @@ class QScene(QtWidgets.QGraphicsScene):
 					self.gui.selected_tower = None
 					self.gui.world.add_tower(unit, coord)
 
+					# reset labels disable buttons
 					self.gui.attack_speed_upgrade_btn.setText("Attack Speed")
 					self.gui.damage_upgrade_btn.setText("Damage")
 					self.gui.range_upgrade_btn.setText("Range")
@@ -59,12 +64,14 @@ class QScene(QtWidgets.QGraphicsScene):
 					self.gui.damage_upgrade_btn.setEnabled(False)
 					self.gui.range_upgrade_btn.setEnabled(False)
 
+					# disconnect buttons while switching targets
 					if self.connected:
 						self.gui.attack_speed_upgrade_btn.clicked.disconnect()
 						self.gui.range_upgrade_btn.clicked.disconnect()
 						self.gui.damage_upgrade_btn.clicked.disconnect()
 						self.connected = False
-					
+
+				# click elsewhere on map
 				else:
 					self.gui.attack_speed_upgrade_btn.setText("Attack Speed")
 					self.gui.damage_upgrade_btn.setText("Damage")
@@ -73,14 +80,14 @@ class QScene(QtWidgets.QGraphicsScene):
 					self.gui.damage_upgrade_btn.setEnabled(False)
 					self.gui.range_upgrade_btn.setEnabled(False)
 					self.gui.selected_tower = None
-
+					self.gui.selected_label.setText("Nothing selected")
+					self.gui.selection_label.setText("")
 					if self.connected:
 						self.gui.attack_speed_upgrade_btn.clicked.disconnect()
 						self.gui.range_upgrade_btn.clicked.disconnect()
 						self.gui.damage_upgrade_btn.clicked.disconnect()
 						self.connected = False
-					
-					
+								
 			except IndexError:
 				print("Click out of screen!")
 
@@ -89,6 +96,7 @@ class GUI(QtWidgets.QMainWindow):
 	
 	def __init__(self, world, square_size):
 		super().__init__()
+
 		self.main_widget = QtWidgets.QWidget()
 		self.setCentralWidget(self.main_widget)
 		self.main_layout = QtWidgets.QHBoxLayout()
@@ -129,6 +137,9 @@ class GUI(QtWidgets.QMainWindow):
 		self.graphic_timer.start(1/60*1000)
 
 	def add_map_grid_items(self):
+		'''
+		Draw base map grid with tiles
+		'''
 		width = self.world.get_width()
 		height = self.world.get_height()
 
@@ -168,7 +179,6 @@ class GUI(QtWidgets.QMainWindow):
 			self.scene.addItem(enemy_graphic)
 
 	def create_projectile(self, enemy, tower):
-
 		projectile = Projectile(enemy, tower, self.square_size)
 		self.projectiles.append(projectile)
 		self.scene.addItem(projectile)
@@ -183,16 +193,14 @@ class GUI(QtWidgets.QMainWindow):
 				self.scene.removeItem(projectile)
 				self.projectiles.remove(projectile)
 
-	def update_all(self):
-		self.update_logic()
-		self.update_graphics()
-
 	def update_graphics(self):
+		'''
+		Update positions of all graphical elements and remove obsolete one's
+		'''
 		self.add_tower_graphics_items()
 		self.add_enemy_graphics_items()
 		self.remove_dead_graphics()
 		
-
 		for enemy_graphic in self.enemy_graphics_items:
 			enemy_graphic.update()
 		for tower_graphic in self.tower_graphics_items:
@@ -209,6 +217,9 @@ class GUI(QtWidgets.QMainWindow):
 		return next_upgrade_value, next_upgrade_cost
 
 	def update_labels(self):
+		'''
+		Update informatic labels
+		'''
 		self.money_label.setText("Money: {}".format(self.world.money))
 		self.health_label.setText("HP: {}".format(self.world.base_hp))
 		
@@ -222,23 +233,25 @@ class GUI(QtWidgets.QMainWindow):
 				next_dmg = self.next_upgrade('UPGRADE_DMG')
 				self.damage_upgrade_btn.setText("Damage: {:d}+({:d}) {}$".format(int(self.selected_tower.damage), int(next_dmg[0]), next_dmg[1]))
 		
-
 	def update_logic(self):
 		self.update_enemies()
 		self.update_spawner()
 		self.update_towers()
 		self.check_status()
 		
-		
-
 	def update_spawner(self):
+		'''
+		Update enemy spawner logic
+		'''
 		if self.world.wave_spawner is not None and not self.world.wave_spawner.complete:
 			self.world.wave_spawner.update(self.dt)
 		else:
 			self.world.wave_spawner = None
 
 	def check_status(self):
-
+		'''
+		Checks game end status and shows game over message
+		'''
 		if not self.world.alive:
 			game_over_message = QtWidgets.QMessageBox()
 			game_over_message.setIcon(QtWidgets.QMessageBox.Critical)
@@ -251,6 +264,9 @@ class GUI(QtWidgets.QMainWindow):
 				QApplication.instance().exit(1)
 
 	def update_towers(self):
+		'''
+		Update tower logic functions
+		'''
 		for tower in self.world.get_towers():
 			# if it returns enemy, tower has attacked, create projectile
 			attacked = tower.update(self.dt)
@@ -259,6 +275,9 @@ class GUI(QtWidgets.QMainWindow):
 				tower.target = None
 
 	def update_enemies(self):
+		'''
+		Update enemy logic functions
+		'''
 		self.world.remove_dead_enemies()
 		enemies = self.world.get_enemies()
 		for enemy in enemies:
@@ -285,9 +304,10 @@ class GUI(QtWidgets.QMainWindow):
 		
 
 	def init_info_layout(self):
+		'''
+		Setups all labels and buttons in right side control panel
+		'''
 
-		self.upgrade_label = QtWidgets.QLabel("Upgrades")
-		self.info_layout.addWidget(self.upgrade_label)
 		self.attack_speed_upgrade_btn = QtWidgets.QPushButton("Attack Speed")
 		self.range_upgrade_btn = QtWidgets.QPushButton("Range")
 		self.damage_upgrade_btn = QtWidgets.QPushButton("Damage")
@@ -295,6 +315,23 @@ class GUI(QtWidgets.QMainWindow):
 		self.attack_speed_upgrade_btn.setEnabled(False)
 		self.range_upgrade_btn.setEnabled(False)
 		self.damage_upgrade_btn.setEnabled(False)
+
+
+		self.health_label = QtWidgets.QLabel()
+		self.money_label = QtWidgets.QLabel()
+		
+		self.selected_label = QtWidgets.QLabel("Selected Tower")
+		self.selection_label = QtWidgets.QLabel()
+
+		self.info_layout.addWidget(self.health_label)
+		self.info_layout.addWidget(self.money_label)
+		self.info_layout.addSpacerItem(QtWidgets.QSpacerItem(200, 200))
+		self.info_layout.addWidget(self.selected_label)
+		self.info_layout.addWidget(self.selection_label)
+		self.info_layout.addStrut(300)
+
+		self.upgrade_label = QtWidgets.QLabel("Upgrades")
+		self.info_layout.addWidget(self.upgrade_label)
 
 		self.info_layout.addWidget(self.attack_speed_upgrade_btn)
 		self.info_layout.addWidget(self.range_upgrade_btn)
@@ -308,7 +345,6 @@ class GUI(QtWidgets.QMainWindow):
 
 		self.tower_label = QtWidgets.QLabel("Towers")
 		self.info_layout.addWidget(self.tower_label)
-		#self.info_layout.setAlignment(self.tower_label, QtCore.Qt.AlignHCenter)
 		self.tower_btn = QtWidgets.QPushButton("Electric")
 		self.info_layout.addWidget(self.tower_btn)
 		self.tower_btn.clicked.connect(partial(self.place_tower, TowerType.ELECTRIC_TOWER))
@@ -317,7 +353,9 @@ class GUI(QtWidgets.QMainWindow):
 		self.info_layout.addWidget(self.tower_btn2)
 
 	def init_window(self):
-
+		'''
+		Setup main window and scene
+		'''
 		self.setGeometry(1024, 720, 1024, 720)
 		self.setWindowTitle('Yet Another Tower Defense')
 		self.show()
@@ -333,15 +371,4 @@ class GUI(QtWidgets.QMainWindow):
 		self.game_layout.addWidget(self.view)
 		self.game_layout.addStretch()
 
-		self.health_label = QtWidgets.QLabel()
-		self.money_label = QtWidgets.QLabel()
 		
-		self.selected_label = QtWidgets.QLabel("Selected Tower")
-		self.selection_label = QtWidgets.QLabel()
-
-		self.info_layout.addWidget(self.health_label)
-		self.info_layout.addWidget(self.money_label)
-		self.info_layout.addSpacerItem(QtWidgets.QSpacerItem(200, 200))
-		self.info_layout.addWidget(self.selected_label)
-		self.info_layout.addWidget(self.selection_label)
-		self.info_layout.addStrut(300)
