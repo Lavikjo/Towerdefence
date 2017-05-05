@@ -266,6 +266,16 @@ class GUI(QtWidgets.QMainWindow):
 
 			if ret == QtWidgets.QMessageBox.Ok:
 				QApplication.instance().exit(1)
+		elif self.world.current_wave == self.world.max_waves and not self.world.get_number_of_enemies() and self.world.base_hp:
+			win_message = QtWidgets.QMessageBox()
+			win_message.setIcon(QtWidgets.QMessageBox.Information)
+			win_message.setWindowTitle("Game status")
+			win_message.setText("You win!")
+			win_message.setInformativeText("Press Ok to exit")
+			ret = win_message.exec()
+
+			if ret == QtWidgets.QMessageBox.Ok:
+				QApplication.instance().exit(1)
 
 	def update_towers(self):
 		'''
