@@ -12,9 +12,26 @@
 			<Projectile_Graphic_Offset_X>5</Projectile_Graphic_Offset_X>
 			<Projectile_Graphic_Offset_Y>0</Projectile_Graphic_Offset_Y>
 			<Upgrades>
+				<MAX_UPGRADE>5</MAX_UPGRADE>
 				<UPGRADE_DMG level = "1">3, 30</UPGRADE_DMG>
 				<UPGRADE_SPEED level = "1">0.1, 40</UPGRADE_SPEED>
 				<UPGRADE_RANGE level = "1">1, 200</UPGRADE_RANGE>
+
+				<UPGRADE_DMG level = "2">3, 30</UPGRADE_DMG>
+				<UPGRADE_SPEED level = "2">0.1, 40</UPGRADE_SPEED>
+				<UPGRADE_RANGE level = "2">1, 200</UPGRADE_RANGE>
+
+				<UPGRADE_DMG level = "3">3, 30</UPGRADE_DMG>
+				<UPGRADE_SPEED level = "3">0.1, 40</UPGRADE_SPEED>
+				<UPGRADE_RANGE level = "3">1, 200</UPGRADE_RANGE>
+
+				<UPGRADE_DMG level = "4">3, 30</UPGRADE_DMG>
+				<UPGRADE_SPEED level = "4">0.1, 40</UPGRADE_SPEED>
+				<UPGRADE_RANGE level = "4">1, 200</UPGRADE_RANGE>
+				
+				<UPGRADE_DMG level = "5">3, 30</UPGRADE_DMG>
+				<UPGRADE_SPEED level = "5">0.1, 40</UPGRADE_SPEED>
+				<UPGRADE_RANGE level = "5">1, 200</UPGRADE_RANGE>
 			</Upgrades>
 		</ELECTRIC_TOWER>
 
@@ -29,9 +46,26 @@
 			<Projectile_Graphic_Offset_X>6</Projectile_Graphic_Offset_X>
 			<Projectile_Graphic_Offset_Y>0</Projectile_Graphic_Offset_Y>
 			<Upgrades>
+				<MAX_UPGRADE>5</MAX_UPGRADE>
 				<UPGRADE_DMG level = "1">4,40</UPGRADE_DMG>
 				<UPGRADE_SPEED level = "1">0.1,40</UPGRADE_SPEED>
 				<UPGRADE_RANGE level = "1">1,200</UPGRADE_RANGE>
+
+				<UPGRADE_DMG level = "2">3, 30</UPGRADE_DMG>
+				<UPGRADE_SPEED level = "2">0.1, 40</UPGRADE_SPEED>
+				<UPGRADE_RANGE level = "2">1, 200</UPGRADE_RANGE>
+
+				<UPGRADE_DMG level = "3">3, 30</UPGRADE_DMG>
+				<UPGRADE_SPEED level = "3">0.1, 40</UPGRADE_SPEED>
+				<UPGRADE_RANGE level = "3">1, 200</UPGRADE_RANGE>
+
+				<UPGRADE_DMG level = "4">3, 30</UPGRADE_DMG>
+				<UPGRADE_SPEED level = "4">0.1, 40</UPGRADE_SPEED>
+				<UPGRADE_RANGE level = "4">1, 200</UPGRADE_RANGE>
+
+				<UPGRADE_DMG level = "5">3, 30</UPGRADE_DMG>
+				<UPGRADE_SPEED level = "5">0.1, 40</UPGRADE_SPEED>
+				<UPGRADE_RANGE level = "5">1, 200</UPGRADE_RANGE>
 			</Upgrades>
 		</LASER_TOWER>
 	</TowerData>

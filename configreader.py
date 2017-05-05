@@ -30,8 +30,11 @@ class ConfigReader:
 		settings = {}
 
 		for upgrade in upgrade_setting:
-			converted_tuple = tuple([convert(x) for x in upgrade.text.split(',')])
-			settings.update({(upgrade.tag, int(upgrade.attrib['level'])): converted_tuple})
+			if upgrade.tag == 'MAX_UPGRADE':
+				settings.update({upgrade.tag: int(upgrade.text)})
+			else:
+				converted_tuple = tuple([convert(x) for x in upgrade.text.split(',')])
+				settings.update({(upgrade.tag, int(upgrade.attrib['level'])): converted_tuple})
 		return settings
 
 	def parse_towers(root):

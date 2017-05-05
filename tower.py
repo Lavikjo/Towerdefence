@@ -111,18 +111,22 @@ class Tower(Unit):
 		Upgrade tower with correct upgrade if there is enough money
 		'''
 		upgrade_level = self.upgrade_levels[upgrade_type]
+		max_level = self.upgrades['MAX_UPGRADE']
 		money = self.get_world().money
-
-		if(upgrade_type == 'UPGRADE_DMG'):
-			cost = self.upgrades[(upgrade_type, upgrade_level)][1]
-			if self.can_afford(cost):
-				self.damage += self.upgrades[(upgrade_type, upgrade_level)][0]
+		if upgrade_level != max_level:
+			if(upgrade_type == 'UPGRADE_DMG'):
+				cost = self.upgrades[(upgrade_type, upgrade_level)][1]
+				if self.can_afford(cost):
+					self.damage += self.upgrades[(upgrade_type, upgrade_level)][0]
+					self.upgrade_levels[upgrade_type] += 1
+			elif(upgrade_type == 'UPGRADE_RANGE'):
+				cost = self.upgrades[(upgrade_type, upgrade_level)][1]
+				if self.can_afford(cost):
+					self.range += self.upgrades[(upgrade_type, upgrade_level)][0]
+					self.upgrade_levels[upgrade_type] += 1
+			elif(upgrade_type == 'UPGRADE_SPEED'):
+				cost = self.upgrades[(upgrade_type, upgrade_level)][1]
+				if self.can_afford(cost):
+					self.attack_speed += self.upgrades[(upgrade_type, upgrade_level)][0]
+					self.upgrade_levels[upgrade_type] += 1
 			
-		elif(upgrade_type == 'UPGRADE_RANGE'):
-			cost = self.upgrades[(upgrade_type, upgrade_level)][1]
-			if self.can_afford(cost):
-				self.range += self.upgrades[(upgrade_type, upgrade_level)][0]
-		elif(upgrade_type == 'UPGRADE_SPEED'):
-			cost = self.upgrades[(upgrade_type, upgrade_level)][1]
-			if self.can_afford(cost):
-				self.attack_speed += self.upgrades[(upgrade_type, upgrade_level)][0]
