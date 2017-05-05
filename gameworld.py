@@ -22,6 +22,7 @@ class GameWorld():
 		self.waves = []
 		self.current_wave = 0
 		self.max_waves = None
+		self.total_enemies = 0
 		
 		self.route = []
 		self.start_square_pos = None
@@ -65,6 +66,11 @@ class GameWorld():
 				count += 1
 		return count
 
+	def get_wave_total(self):
+		'''
+		Gets total amount of enemies in current wave
+		'''
+		return self.total_enemies
 	def get_number_of_enemies(self):
 		'''
 		Return numbers of alive enemies
@@ -96,7 +102,9 @@ class GameWorld():
 		'''
 		if not self.get_number_of_enemies() and self.wave_spawner is None and self.current_wave is not len(self.waves):
 			self.wave_spawner = Spawner(self, self.waves[self.current_wave], 1, 100)
+			self.total_enemies = sum(self.waves[self.current_wave].values())
 			self.current_wave += 1
+
 
 	def set_route(self, route_data):
 		'''
