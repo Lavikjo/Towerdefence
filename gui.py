@@ -12,6 +12,13 @@ class QScene(QtWidgets.QGraphicsScene):
 		self.gui = gui
 		self.connected = False
 
+	def disconnect_buttons(self):
+		if self.connected:
+			self.gui.attack_speed_upgrade_btn.clicked.disconnect()
+			self.gui.range_upgrade_btn.clicked.disconnect()
+			self.gui.damage_upgrade_btn.clicked.disconnect()
+			self.connected = False
+
 	def mousePressEvent(self, ev):
 		if ev.button() == QtCore.Qt.LeftButton:
 			pos = ev.scenePos()
@@ -25,13 +32,14 @@ class QScene(QtWidgets.QGraphicsScene):
 				# select tower
 				if tower:
 
+					# disable previous tower buttons
+					self.disconnect_buttons()
+
 					self.gui.selected_label.setText("Selected tower")
 					self.gui.selection_label.setText("{}: {}".format(str(tower.type).split(".")[-1] ,coord))
 					self.gui.selected_tower = tower
 
-					self.gui.attack_speed_upgrade_btn.setEnabled(True)
-					self.gui.damage_upgrade_btn.setEnabled(True)
-					self.gui.range_upgrade_btn.setEnabled(True)
+
 
 					# check if upgrade buttons are not connected and connect them only once
 					if not self.connected:
@@ -41,13 +49,7 @@ class QScene(QtWidgets.QGraphicsScene):
 						self.connected = True
 
 					self.gui.selected_unit = None
-					max_upgrade = self.gui.selected_tower.upgrades['MAX_UPGRADE']
-					next_atk_speed = self.gui.next_upgrade('UPGRADE_SPEED')
-					self.gui.attack_speed_upgrade_btn.setText("Attack Speed: {:0.1f}+({:0.1f}) {}$ {}/{}".format(self.gui.selected_tower.attack_speed, next_atk_speed[0], next_atk_speed[1], self.gui.selected_tower.upgrade_levels['UPGRADE_SPEED'], max_upgrade))
-					next_range = self.gui.next_upgrade('UPGRADE_RANGE')
-					self.gui.range_upgrade_btn.setText("Range: {:d}+({:d}) {}$ {}/{}".format(int(self.gui.selected_tower.range), int(next_range[0]), next_range[1], self.gui.selected_tower.upgrade_levels['UPGRADE_RANGE'], max_upgrade))
-					next_dmg = self.gui.next_upgrade('UPGRADE_DMG')
-					self.gui.damage_upgrade_btn.setText("Damage: {:d}+({:d}) {}$ {}/{}".format(int(self.gui.selected_tower.damage), int(next_dmg[0]), next_dmg[1], self.gui.selected_tower.upgrade_levels['UPGRADE_DMG'], max_upgrade))
+					self.gui.upgrade_buttons_enabled(True)
 				
 				# place new tower
 				elif unit:
@@ -57,37 +59,19 @@ class QScene(QtWidgets.QGraphicsScene):
 					self.gui.selected_tower = None
 					self.gui.world.add_tower(unit, coord)
 
-					# reset labels disable buttons
-					self.gui.attack_speed_upgrade_btn.setText("Attack Speed")
-					self.gui.damage_upgrade_btn.setText("Damage")
-					self.gui.range_upgrade_btn.setText("Range")
-					self.gui.attack_speed_upgrade_btn.setEnabled(False)
-					self.gui.damage_upgrade_btn.setEnabled(False)
-					self.gui.range_upgrade_btn.setEnabled(False)
+					# reset labels
+					self.gui.upgrade_buttons_enabled(False)
 
 					# disconnect buttons while switching targets
-					if self.connected:
-						self.gui.attack_speed_upgrade_btn.clicked.disconnect()
-						self.gui.range_upgrade_btn.clicked.disconnect()
-						self.gui.damage_upgrade_btn.clicked.disconnect()
-						self.connected = False
+					self.disconnect_buttons()
 
 				# click elsewhere on map
 				else:
-					self.gui.attack_speed_upgrade_btn.setText("Attack Speed")
-					self.gui.damage_upgrade_btn.setText("Damage")
-					self.gui.range_upgrade_btn.setText("Range")
-					self.gui.attack_speed_upgrade_btn.setEnabled(False)
-					self.gui.damage_upgrade_btn.setEnabled(False)
-					self.gui.range_upgrade_btn.setEnabled(False)
+					self.gui.upgrade_buttons_enabled(False)
 					self.gui.selected_tower = None
 					self.gui.selected_label.setText("Nothing selected")
 					self.gui.selection_label.setText("")
-					if self.connected:
-						self.gui.attack_speed_upgrade_btn.clicked.disconnect()
-						self.gui.range_upgrade_btn.clicked.disconnect()
-						self.gui.damage_upgrade_btn.clicked.disconnect()
-						self.connected = False
+					self.disconnect_buttons()
 								
 			except IndexError:
 				print("Click out of screen!")
@@ -229,13 +213,7 @@ class GUI(QtWidgets.QMainWindow):
 		# upgrade labels in upgrade buttons if state change was detected
 		if self.attack_speed_upgrade_btn.clicked or self.range_upgrade_btn.clicked or self.damage_upgrade_btn.clicked:
 			if self.selected_tower:
-				max_upgrade = self.selected_tower.upgrades['MAX_UPGRADE']
-				next_atk_speed = self.next_upgrade('UPGRADE_SPEED')
-				self.attack_speed_upgrade_btn.setText("Attack Speed: {:0.1f}+({:0.1f}) {}$ {}/{}".format(self.selected_tower.attack_speed, next_atk_speed[0], next_atk_speed[1], self.selected_tower.upgrade_levels['UPGRADE_SPEED'], max_upgrade))
-				next_range = self.next_upgrade('UPGRADE_RANGE')
-				self.range_upgrade_btn.setText("Range: {:d}+({:d}) {}$ {}/{}".format(int(self.selected_tower.range), int(next_range[0]), next_range[1], self.selected_tower.upgrade_levels['UPGRADE_RANGE'], max_upgrade))
-				next_dmg = self.next_upgrade('UPGRADE_DMG')
-				self.damage_upgrade_btn.setText("Damage: {:d}+({:d}) {}$ {}/{}".format(int(self.selected_tower.damage), int(next_dmg[0]), next_dmg[1], self.selected_tower.upgrade_levels['UPGRADE_DMG'], max_upgrade))
+				self.upgrade_buttons_enabled(True)
 		
 	def update_logic(self):
 		self.update_enemies()
@@ -254,7 +232,7 @@ class GUI(QtWidgets.QMainWindow):
 
 	def check_status(self):
 		'''
-		Checks game end status and shows game over message
+		Checks game end status and shows game over or win message
 		'''
 		if not self.world.alive:
 			game_over_message = QtWidgets.QMessageBox()
@@ -266,6 +244,7 @@ class GUI(QtWidgets.QMainWindow):
 
 			if ret == QtWidgets.QMessageBox.Ok:
 				QApplication.instance().exit(1)
+
 		elif self.world.current_wave == self.world.max_waves and not self.world.get_number_of_enemies() and self.world.base_hp:
 			win_message = QtWidgets.QMessageBox()
 			win_message.setIcon(QtWidgets.QMessageBox.Information)
@@ -306,16 +285,27 @@ class GUI(QtWidgets.QMainWindow):
 		self.selected_unit = Tower(tower_type, self.world.configs['TowerData'])
 		self.selection_label.setText("{}".format(tower_type).split(".")[-1])
 
-		self.attack_speed_upgrade_btn.setText("Attack Speed")
-		self.damage_upgrade_btn.setText("Damage")
-		self.range_upgrade_btn.setText("Range")
-		self.attack_speed_upgrade_btn.setEnabled(False)
-		self.damage_upgrade_btn.setEnabled(False)
-		self.range_upgrade_btn.setEnabled(False)
+
+		self.upgrade_buttons_enabled(False)
 		self.selected_tower = None
 
+	def upgrade_buttons_enabled(self, value):
 
-		
+		self.attack_speed_upgrade_btn.setEnabled(value)
+		self.range_upgrade_btn.setEnabled(value)
+		self.damage_upgrade_btn.setEnabled(value)
+		if not value:
+			self.attack_speed_upgrade_btn.setText("Attack Speed")
+			self.damage_upgrade_btn.setText("Damage")
+			self.range_upgrade_btn.setText("Range")
+		elif value:
+			max_upgrade = self.selected_tower.upgrades['MAX_UPGRADE']
+			next_atk_speed = self.next_upgrade('UPGRADE_SPEED')
+			self.attack_speed_upgrade_btn.setText("Attack Speed: {:0.1f}+({:0.1f}) {}$ {}/{}".format(self.selected_tower.attack_speed, next_atk_speed[0], next_atk_speed[1], self.selected_tower.upgrade_levels['UPGRADE_SPEED'], max_upgrade))
+			next_range = self.next_upgrade('UPGRADE_RANGE')
+			self.range_upgrade_btn.setText("Range: {:d}+({:d}) {}$ {}/{}".format(int(self.selected_tower.range), int(next_range[0]), next_range[1], self.selected_tower.upgrade_levels['UPGRADE_RANGE'], max_upgrade))
+			next_dmg = self.next_upgrade('UPGRADE_DMG')
+			self.damage_upgrade_btn.setText("Damage: {:d}+({:d}) {}$ {}/{}".format(int(self.selected_tower.damage), int(next_dmg[0]), next_dmg[1], self.selected_tower.upgrade_levels['UPGRADE_DMG'], max_upgrade))
 
 	def init_info_layout(self):
 		'''
@@ -326,10 +316,7 @@ class GUI(QtWidgets.QMainWindow):
 		self.range_upgrade_btn = QtWidgets.QPushButton("Range")
 		self.damage_upgrade_btn = QtWidgets.QPushButton("Damage")
 
-		self.attack_speed_upgrade_btn.setEnabled(False)
-		self.range_upgrade_btn.setEnabled(False)
-		self.damage_upgrade_btn.setEnabled(False)
-
+		self.upgrade_buttons_enabled(False)
 
 		self.health_label = QtWidgets.QLabel()
 		self.money_label = QtWidgets.QLabel()
